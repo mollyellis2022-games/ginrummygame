@@ -11,7 +11,10 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "cookie": "^1.1.1",
     "express": "^5.2.1",
+    "google-auth-library": "^10.5.0",
+    "mysql2": "^3.16.1",
     "ws": "^8.18.3"
   }
 }
