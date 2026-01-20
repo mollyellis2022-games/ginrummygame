@@ -9,6 +9,13 @@
  * Client compatibility targets (socket-handler.js):
  * - Outgoing server messages: init, room_update, join_ok, join_error, game_start, state, round_reveal, timeout_discard
  * - Incoming client actions: draw-deck, draw-discard, discard, gin, rematch, hand_order (+ supported aliases)
+ 
+ client ID
+ 680046667724-utihfh41n2riu7u4fkombuj15d578ipp.apps.googleusercontent.com
+ client secret
+ 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
+
+ db connnection string = postgresql://postgres:[YOUR-PASSWORD]@db.bywpqhwumxibkdcamczs.supabase.co:5432/postgres
  */
 
 const express = require("express");
