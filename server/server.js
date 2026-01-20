@@ -18,18 +18,26 @@ const Rooms = require("./rooms");
 
 const app = express();
 const server = http.createServer(app);
+app.get("/health", (req, res) => res.status(200).send("ok"));
+
 
 /**
  * Origin allow-list:
  * - `verifyClient` blocks unknown origins for browser WS connections.
  * - Keep dev URLs + your production domain here.
  */
+const envAllowed = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 const allowed = new Set([
   "http://localhost:3000",
   "http://127.0.0.1:3000",
   "http://192.168.1.71:3000",
-  "https://ellisandcodesigns.co.uk",
+  ...envAllowed,
 ]);
+
 
 /**
  * WS server:

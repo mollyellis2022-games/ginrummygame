@@ -3,17 +3,12 @@ window.showScreen?.("screen-loading");
 const isLocalDevHost =
   location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
-const isSecurePage = location.protocol === "https:";
+// ✅ Your Northflank backend domain (custom domain recommended)
+const PROD_WS_URL = "wss://api.ellisandcodesigns.co.uk";
 
-const WS_URL = isLocalDevHost
-  ? `ws://localhost:3000`
-  : isSecurePage
-    ? "wss://gin-rummy-server.onrender.com"
-    : `ws://${location.hostname}:3000`;
+const WS_URL = isLocalDevHost ? "ws://localhost:3000" : PROD_WS_URL;
 
-    
 console.log(`[ENV] ${location.protocol}//${location.hostname} → ${WS_URL}`);
-
 
 const socket = new WebSocket(WS_URL);
 window.socket = socket;
