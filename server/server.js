@@ -15,10 +15,206 @@ const express = require("express");
 const http = require("http");
 const WebSocket = require("ws");
 const Rooms = require("./rooms");
+const crypto = require("crypto");
+const cookie = require("cookie");
+const mysql = require("mysql2/promise");
+const { OAuth2Client } = require("google-auth-library");
+
 
 const app = express();
 const server = http.createServer(app);
+
+// -------------------- Health (Northflank readiness) --------------------
 app.get("/health", (req, res) => res.status(200).send("ok"));
+
+// -------------------- MySQL (IONOS) --------------------
+const db = mysql.createPool({
+  host: process.env.DB_HOST,                 // e.g. 19438372.hosting-data.io
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+});
+
+// -------------------- Google OAuth --------------------
+// IMPORTANT: set these env vars on Northflank later:
+// GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, FRONTEND_ORIGIN
+const GOOGLE_REDIRECT_URI = "https://api.ellisandcodesigns.co.uk/auth/google/callback";
+
+const oauth = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  GOOGLE_REDIRECT_URI
+);
+
+// -------------------- Sessions --------------------
+function newSessionId() {
+  return crypto.randomBytes(32).toString("hex"); // 64 chars
+}
+
+function buildSessionCookie() {
+  // Cookie scoped to api. domain automatically, HttpOnly prevents JS access.
+  // SameSite=Lax works well for OAuth redirects + normal navigation.
+  return [
+    "Path=/",
+    "HttpOnly",
+    "Secure",
+    "SameSite=Lax",
+    "Max-Age=2592000", // 30 days
+  ].join("; ");
+}
+
+async function createSession(userId) {
+  const sid = newSessionId();
+  await db.execute(
+    "INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY))",
+    [sid, userId]
+  );
+  return sid;
+}
+
+async function getUserBySessionId(sid) {
+  const [rows] = await db.execute(
+    `
+    SELECT u.id, u.email, p.display_name, p.avatar_url
+    FROM sessions s
+    JOIN users u ON u.id = s.user_id
+    JOIN profiles p ON p.user_id = u.id
+    WHERE s.id = ?
+      AND s.revoked_at IS NULL
+      AND s.expires_at > NOW()
+    LIMIT 1
+    `,
+    [sid]
+  );
+  return rows[0] || null;
+}
+
+function requireEnv(name) {
+  if (!process.env[name]) throw new Error(`Missing env var: ${name}`);
+}
+
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
+
+app.use((req, res, next) => {
+  if (FRONTEND_ORIGIN) {
+    res.setHeader("Access-Control-Allow-Origin", FRONTEND_ORIGIN);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
+
+// -------------------- Auth routes --------------------
+app.get("/auth/google/start", (req, res) => {
+  requireEnv("GOOGLE_CLIENT_ID");
+  requireEnv("GOOGLE_CLIENT_SECRET");
+  requireEnv("FRONTEND_ORIGIN");
+
+  const url = oauth.generateAuthUrl({
+    access_type: "offline",
+    scope: ["openid", "email", "profile"],
+    prompt: "select_account",
+  });
+
+  res.redirect(url);
+});
+
+app.get("/auth/google/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    if (!code) return res.status(400).send("Missing code");
+
+    const { tokens } = await oauth.getToken(String(code));
+    if (!tokens.id_token) return res.status(400).send("Missing id_token");
+
+    const ticket = await oauth.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const googleSub = payload.sub;
+    const email = payload.email;
+    const name = payload.name || "Player";
+    const picture = payload.picture || null;
+
+    // Upsert user
+    let userId = null;
+
+    const [bySub] = await db.execute("SELECT id FROM users WHERE google_sub = ? LIMIT 1", [googleSub]);
+    if (bySub[0]) {
+      userId = bySub[0].id;
+      await db.execute("UPDATE users SET last_login_at = NOW() WHERE id = ?", [userId]);
+    } else {
+      const [byEmail] = await db.execute("SELECT id FROM users WHERE email = ? LIMIT 1", [email]);
+      if (byEmail[0]) {
+        userId = byEmail[0].id;
+        await db.execute(
+          "UPDATE users SET google_sub = ?, last_login_at = NOW() WHERE id = ?",
+          [googleSub, userId]
+        );
+      } else {
+        const [ins] = await db.execute(
+          "INSERT INTO users (email, google_sub, last_login_at) VALUES (?, ?, NOW())",
+          [email, googleSub]
+        );
+        userId = ins.insertId;
+
+        const displayName = String(name).slice(0, 50);
+        await db.execute(
+          "INSERT INTO profiles (user_id, display_name, avatar_url) VALUES (?, ?, ?)",
+          [userId, displayName, picture]
+        );
+      }
+    }
+
+    // Ensure profile exists (in case of linking an old user)
+    await db.execute(
+      "INSERT IGNORE INTO profiles (user_id, display_name, avatar_url) VALUES (?, ?, ?)",
+      [userId, String(name).slice(0, 50), picture]
+    );
+
+    const sid = await createSession(userId);
+
+    res.setHeader("Set-Cookie", `sid=${sid}; ${buildSessionCookie()}`);
+    res.redirect(process.env.FRONTEND_ORIGIN);
+  } catch (err) {
+    console.error("Google callback error:", err);
+    res.status(500).send("Auth failed");
+  }
+});
+
+app.post("/auth/logout", express.json(), async (req, res) => {
+  const cookies = cookie.parse(req.headers.cookie || "");
+  const sid = cookies.sid;
+
+  if (sid) {
+    await db.execute("UPDATE sessions SET revoked_at = NOW() WHERE id = ? LIMIT 1", [sid]);
+    res.setHeader(
+      "Set-Cookie",
+      "sid=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+    );
+  }
+
+  res.status(200).json({ ok: true });
+});
+
+app.get("/me", async (req, res) => {
+  const cookies = cookie.parse(req.headers.cookie || "");
+  const sid = cookies.sid;
+
+  if (!sid) return res.status(200).json({ user: null });
+
+  const user = await getUserBySessionId(sid);
+  return res.status(200).json({ user });
+});
+
 
 
 /**
@@ -46,13 +242,38 @@ const allowed = new Set([
  */
 const wss = new WebSocket.Server({
   server,
-  verifyClient: (info, done) => {
-    const origin = info.origin;
-    if (!origin) return done(true); // dev convenience for clients without Origin header
-    if (allowed.has(origin)) return done(true);
-    return done(false, 401, "Origin not allowed");
+  verifyClient: async (info, done) => {
+    try {
+      const origin = info.origin;
+
+      // Require Origin in production
+      if (!origin) {
+        if (process.env.NODE_ENV !== "production") return done(true);
+        return done(false, 401, "Origin required");
+      }
+
+      if (!allowed.has(origin)) return done(false, 401, "Origin not allowed");
+
+      // OPTIONAL: require sign-in for WS connections
+      // If you want guests allowed for now, comment this whole block out.
+      const cookies = cookie.parse(info.req.headers.cookie || "");
+      const sid = cookies.sid;
+
+      if (sid) {
+        const user = await getUserBySessionId(sid);
+        if (user) info.req.user = user;
+      }
+
+      // Always allow the connection (origin is still enforced)
+      return done(true);
+    } catch (e) {
+      console.error("verifyClient error:", e);
+      return done(false, 401, "Unauthorized");
+    }
   },
 });
+
+
 
 /**
  * Static hosting:
@@ -848,9 +1069,11 @@ function removeSocketFromRoom(ws) {
 
 wss.on("connection", (ws, req) => {
   // Note: verifyClient already checks Origin, this is extra logging/defense.
-  const origin = req.headers.origin;
-  console.log("WS connection attempt, origin =", origin);
+   ws.user = req.user || null;
 
+   const origin = req.headers.origin;
+  console.log("WS connection attempt, origin =", origin);
+  
   if (origin && !allowed.has(origin)) {
     console.log("Blocked WS origin:", origin);
     ws.close();
