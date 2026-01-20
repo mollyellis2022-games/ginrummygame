@@ -29,6 +29,76 @@
     </div>
   </div>
 
+
+<!----------- HOME SCREEN ------------>
+
+  <section id="screen-home" class="screen home-screen">
+  <header class="home-topbar">
+    <div class="home-brand">
+      <img class="home-logo" src="/assets/icon-192.png" alt="" />
+      <div class="home-wordmark">
+        <div class="home-title">Gin Rummy Friends</div>
+        <div class="home-subtitle">Play live with friends in seconds</div>
+      </div>
+    </div>
+
+    <a class="icon-btn" href="https://api.ellisandcodesigns.co.uk/auth/google/start" id="homeLoginBtn" aria-label="Sign in">
+      Sign in
+    </a>
+  </header>
+
+  <main class="home-main">
+    <div class="home-hero">
+      <div class="hero-glow"></div>
+      <div class="hero-copy">
+        <h1>Play Gin Rummy</h1>
+        <p>Fast matches, smooth cards, real-time play with friends.</p>
+      </div>
+
+      <div class="home-ctas">
+        <button class="btn btn-primary" id="homePlayLiveBtn">Play Live</button>
+        <button class="btn btn-secondary" id="homePracticeBtn">Practice</button>
+      </div>
+    </div>
+
+    <div class="home-cards">
+      <div class="home-card">
+        <div class="card-title">Create Room</div>
+        <div class="card-desc">Invite friends with a code.</div>
+        <button class="btn btn-tertiary" id="homeCreateBtn">Create</button>
+      </div>
+
+      <div class="home-card">
+        <div class="card-title">Join Room</div>
+        <div class="card-desc">Enter a room code to jump in.</div>
+        <div class="join-row">
+          <input id="homeJoinCode" class="join-input" maxlength="8" placeholder="CODE" />
+          <button class="btn btn-tertiary" id="homeJoinBtn">Join</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-profile" id="homeProfileChip" style="display:none;">
+      <div class="profile-chip">
+        <div class="avatar">
+          <img id="homeAvatar" alt="" />
+        </div>
+        <div class="profile-meta">
+          <div class="profile-name" id="homeName">Player</div>
+          <div class="profile-hint" id="homeHint">Signed in</div>
+        </div>
+      </div>
+
+      <button class="btn btn-ghost" id="homeLogoutBtn">Sign out</button>
+    </div>
+  </main>
+
+  <footer class="home-footer">
+    <span class="ver">v0.1</span>
+  </footer>
+</section>
+
+
   <!---------- CREATE GAME SCREEN ----------->
 
     <div id="screen-create" class="screen hidden screen--pattern">

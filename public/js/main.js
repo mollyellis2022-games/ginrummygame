@@ -87,7 +87,7 @@ function setLoadingMessage(msg) {
 socket.addEventListener("open", () => {
   if (didEnterLobby) return;
   didEnterLobby = true;
-  window.showScreen("screen-create");
+  window.showScreen("screen-home");
 });
 
 socket.addEventListener("error", () => {

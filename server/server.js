@@ -1196,6 +1196,7 @@ wss.on("connection", (ws, req) => {
           : { id: ws.guestId, display_name: "Guest", avatar_url: null },
       });
 
+
       safeSend(ws, { type: "join_ok", code });
 
       room.sendRoomUpdate();
