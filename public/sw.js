@@ -1,24 +1,35 @@
-
-const CACHE_VERSION = "v2026-01-20-1";
-const STATIC_CACHE = `static-${CACHE_VERSION}`;
+const CACHE_NAME = "gr-v1";
+const STATIC_CACHE = `static-${CACHE_NAME}`;
 
 // Keep this list small  important. Runtime cache will pick up the rest.
 const PRECACHE_URLS = [
   "/",
   "/index.html",
   "/css/style.css",
-  "/css/animations.css",
-  "/css/deck-discard.css",
   "/js/main.js",
   "/manifest.json",
-  "/assets/card-back-classic.webp",
-  "/assets/card-back-classic.png",
+  "/assets/icons/icon-192.png",
 ];
 
 self.addEventListener("install", (event) => {
-  self.skipWaiting();
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE_URLS)),
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      // Cache sequentially so we can pinpoint failures
+      for (const url of PRECACHE_URLS) {
+        try {
+          const res = await fetch(url, { cache: "reload" });
+          if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+          await cache.put(url, res);
+        } catch (err) {
+          console.error("[SW] Failed to precache:", url, err);
+        }
+      }
+
+      // Optional: ensure SW activates even if some assets failed
+      self.skipWaiting();
+    })(),
   );
 });
 
