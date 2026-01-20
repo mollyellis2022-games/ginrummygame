@@ -30,9 +30,9 @@
   </div>
 
 
-<!----------- HOME SCREEN ------------>
+  <!----------- HOME SCREEN ------------>
 
-  <section id="screen-home" class="screen home-screen">
+    <section id="screen-home" class="screen home-screen">
   <header class="home-topbar">
     <div class="home-brand">
       <img class="home-logo" src="/assets/icons/icon-192.png" alt="Gin Rummy" />
@@ -42,9 +42,10 @@
       </div>
     </div>
 
-    <a class="icon-btn" href="https://api.ellisandcodesigns.co.uk/auth/google/start" id="homeLoginBtn" aria-label="Sign in">
-      Sign in
-    </a>
+    <a class="icon-btn"
+       href="https://api.ellisandcodesigns.co.uk/auth/google/start"
+       id="homeLoginBtn"
+       aria-label="Sign in">Sign in</a>
   </header>
 
   <main class="home-main">
@@ -61,42 +62,53 @@
       </div>
     </div>
 
-    <div class="home-cards">
-      <div class="home-card">
+    <!-- Horizontal carousel row -->
+    <div class="home-cards-row" id="homeCardsRow">
+      <div class="home-card home-card-wide" data-card="create">
         <div class="card-title">Create Room</div>
         <div class="card-desc">Invite friends with a code.</div>
         <button class="btn btn-tertiary" id="homeCreateBtn">Create</button>
       </div>
 
-      <div class="home-card">
+      <div class="home-card home-card-wide" data-card="join">
         <div class="card-title">Join Room</div>
         <div class="card-desc">Enter a room code to jump in.</div>
+
         <div class="join-row">
           <input id="homeJoinCode" class="join-input" maxlength="8" placeholder="CODE" />
           <button class="btn btn-tertiary" id="homeJoinBtn">Join</button>
         </div>
       </div>
+
+      <div class="home-card home-card-wide" data-card="profile" id="homeProfileCard">
+        <div class="card-title">Profile</div>
+        <div class="card-desc" id="homeProfileCardDesc">Sign in to sync stats.</div>
+
+        <div class="profile-mini" id="homeProfileMini" style="display:none;">
+          <div class="avatar mini">
+            <img id="homeAvatar" alt="" />
+          </div>
+          <div class="profile-mini-meta">
+            <div class="profile-name" id="homeName">Player</div>
+            <div class="profile-hint" id="homeHint">Signed in</div>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost" id="homeLogoutBtn" style="display:none;">Sign out</button>
+      </div>
     </div>
 
-    <div class="home-profile" id="homeProfileChip" style="display:none;">
-      <div class="profile-chip">
-        <div class="avatar">
-          <img id="homeAvatar" alt="" />
-        </div>
-        <div class="profile-meta">
-          <div class="profile-name" id="homeName">Player</div>
-          <div class="profile-hint" id="homeHint">Signed in</div>
-        </div>
-      </div>
-
-      <button class="btn btn-ghost" id="homeLogoutBtn">Sign out</button>
+    <!-- little dots (optional but nice) -->
+    <div class="home-carousel-dots" id="homeCarouselDots" aria-hidden="true">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
     </div>
   </main>
-
-  <footer class="home-footer">
-    <span class="ver">v0.1</span>
-  </footer>
 </section>
+
+
+
 
 
   <!---------- CREATE GAME SCREEN ----------->

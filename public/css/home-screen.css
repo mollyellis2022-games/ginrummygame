@@ -1,4 +1,6 @@
 .home-screen {
+    overflow: hidden;
+    height: 100%;
     min-height: 100svh;
     padding: 14px 14px 18px;
     display: flex;
@@ -9,7 +11,7 @@
         radial-gradient(700px 500px at 80% 30%, rgba(255, 215, 130, .14), transparent 60%),
         linear-gradient(180deg, #0a2a18, #06180f 60%, #04110a);
     color: #eaf6ee;
-}
+} 
 
 .home-topbar {
     display: flex;
@@ -67,6 +69,7 @@
     flex-direction: column;
     gap: 14px;
     flex: 1;
+    min-height: 0;
 }
 
 .home-hero {
@@ -128,18 +131,42 @@
     border: 1px solid rgba(255, 255, 255, .12);
 }
 
-.home-cards {
-    display: grid;
-    grid-template-columns: 1fr;
+.home-cards-row {
+    display: flex;
     gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 8px;
+
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+
+    scrollbar-width: none;
+    touch-action: pan-x;
+    /* ✅ key if body disables touch scrolling */
 }
 
+.home-cards-row::-webkit-scrollbar {
+    display: none;
+}
+
+.home-card-wide {
+    flex: 0 0 86%;
+    scroll-snap-align: start;
+}
+
+@media (min-width: 520px) {
+    .home-card-wide {
+        flex-basis: 60%;
+    }
+}
+
+
 .home-card {
-    border-radius: 20px;
-    padding: 14px;
-    border: 1px solid rgba(255, 255, 255, .10);
-    background: rgba(0, 0, 0, .20);
-    box-shadow: 0 16px 44px rgba(0, 0, 0, .35);
+    flex: 0 0 86%;
+    /* each card is a swipeable page */
+    scroll-snap-align: start;
 }
 
 .card-title {
@@ -182,7 +209,7 @@
 }
 
 .home-profile {
-    margin-top: auto;
+    margin-top: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -238,9 +265,9 @@
     font-weight: 900;
 }
 
-.home-footer {
-    display: flex;
-    justify-content: center;
-    opacity: .7;
-    font-size: 12px;
+
+@media (min-width: 520px) {
+    .home-card {
+        flex-basis: 60%;
+    }
 }
