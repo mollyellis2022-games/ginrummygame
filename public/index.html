@@ -33,82 +33,99 @@
   <!----------- HOME SCREEN ------------>
 
     <section id="screen-home" class="screen home-screen">
-  <header class="home-topbar">
-    <div class="home-brand">
-      <img class="home-logo" src="/assets/icons/icon-192.png" alt="Gin Rummy" />
-      <div class="home-wordmark">
-        <div class="home-title">Gin Rummy Friends</div>
-        <div class="home-subtitle">Play live with friends in seconds</div>
-      </div>
+
+  <!-- TOP BAR -->
+  <header class="home-appbar">
+    <!-- Left -->
+    <div class="appbar-left">
+      <button class="home-profile-btn" id="homeProfileBtn" type="button" aria-label="Profile">
+        <span class="home-game-profile-icon">
+          <img id="homeAvatar" alt="" />
+          <span class="home-avatar-fallback" id="homeAvatarFallback">G</span>
+        </span>
+      </button>
+
+
+      <a class="signin-inline"
+         href="https://api.ellisandcodesigns.co.uk/auth/google/start"
+         id="homeLoginBtn">Sign in</a>
     </div>
 
-    <a class="icon-btn"
-       href="https://api.ellisandcodesigns.co.uk/auth/google/start"
-       id="homeLoginBtn"
-       aria-label="Sign in">Sign in</a>
+    <!-- Center -->
+    <div class="appbar-center" aria-label="App">
+      <img class="appbar-logo" src="/assets/icons/icon-192.png" alt="" />
+      <span class="appbar-title">Gin Rummy Friends</span>
+    </div>
+
+    <!-- Right -->
+    <div class="appbar-right">
+      <button class="icon-ghost" id="homeRulesBtn" type="button" aria-label="Rules">?</button>
+      <button class="icon-ghost" id="homeSettingsBtn" type="button" aria-label="Settings">⚙</button>
+    </div>
   </header>
 
-  <main class="home-main">
-    <div class="home-hero">
-      <div class="hero-glow"></div>
-      <div class="hero-copy">
-        <h1>Play Gin Rummy</h1>
-        <p>Fast matches, smooth cards, real-time play with friends.</p>
-      </div>
+  <!-- MAIN ACTIONS -->
+  <main class="home-actions">
+    <button class="action-tile" id="homePlayBtn" type="button">
+      <div class="action-icon" aria-hidden="true">🃏</div>
+      <div class="action-label">Play</div>
+    </button>
 
-      <div class="home-ctas">
-        <button class="btn btn-primary" id="homePlayLiveBtn">Play Live</button>
-        <button class="btn btn-secondary" id="homePracticeBtn">Practice</button>
-      </div>
-    </div>
+    <button class="action-tile" id="homeRoomsBtn" type="button">
+      <div class="action-icon" aria-hidden="true">🔒</div>
+      <div class="action-label">Rooms</div>
+    </button>
 
-    <!-- Horizontal carousel row -->
-    <div class="home-cards-row" id="homeCardsRow">
-      <div class="home-card home-card-wide" data-card="create">
-        <div class="card-title">Create Room</div>
-        <div class="card-desc">Invite friends with a code.</div>
-        <button class="btn btn-tertiary" id="homeCreateBtn">Create</button>
-      </div>
-
-      <div class="home-card home-card-wide" data-card="join">
-        <div class="card-title">Join Room</div>
-        <div class="card-desc">Enter a room code to jump in.</div>
-
-        <div class="join-row">
-          <input id="homeJoinCode" class="join-input" maxlength="8" placeholder="CODE" />
-          <button class="btn btn-tertiary" id="homeJoinBtn">Join</button>
-        </div>
-      </div>
-
-      <div class="home-card home-card-wide" data-card="profile" id="homeProfileCard">
-        <div class="card-title">Profile</div>
-        <div class="card-desc" id="homeProfileCardDesc">Sign in to sync stats.</div>
-
-        <div class="profile-mini" id="homeProfileMini" style="display:none;">
-          <div class="avatar mini">
-            <img id="homeAvatar" alt="" />
-          </div>
-          <div class="profile-mini-meta">
-            <div class="profile-name" id="homeName">Player</div>
-            <div class="profile-hint" id="homeHint">Signed in</div>
-          </div>
-        </div>
-
-        <button class="btn btn-ghost" id="homeLogoutBtn" style="display:none;">Sign out</button>
-      </div>
-    </div>
-
-    <!-- little dots (optional but nice) -->
-    <div class="home-carousel-dots" id="homeCarouselDots" aria-hidden="true">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
+    <button class="action-tile" id="homePracticeBtn" type="button">
+      <div class="action-icon" aria-hidden="true">🤖</div>
+      <div class="action-label">Practice</div>
+    </button>
   </main>
+
+  <!-- BOTTOM BAR -->
+  <nav class="home-tabbar" aria-label="Bottom navigation">
+    <button class="tab-btn" id="homeLeaderboardBtn" type="button">
+      <span class="tab-ic" aria-hidden="true">🏆</span>
+      <span class="tab-txt">Leaderboard</span>
+    </button>
+
+    <button class="tab-btn" id="homeFriendsBtn" type="button">
+      <span class="tab-ic" aria-hidden="true">👥</span>
+      <span class="tab-txt">Friends</span>
+    </button>
+  </nav>
+
+  <!-- PROFILE MODAL (placeholder) -->
+  <div class="modal-scrim" id="homeProfileModal" aria-hidden="true">
+    <div class="modal-sheet" role="dialog" aria-modal="true" aria-label="Profile">
+      <div class="modal-head">
+        <div class="modal-title">Profile</div>
+        <button class="icon-ghost" id="homeProfileCloseBtn" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-profile-row">
+          <span class="profile-ring big">
+            <img id="homeAvatarBig" alt="" />
+          </span>
+          <div class="modal-profile-meta">
+            <div class="modal-name" id="homeName">Guest</div>
+            <div class="modal-sub" id="homeHint">Sign in to sync your profile</div>
+          </div>
+        </div>
+
+        <div class="modal-card">
+          <div class="modal-card-title">Coming soon</div>
+          <div class="modal-card-desc">Profile editing, stats, and cosmetic badges.</div>
+        </div>
+
+        <button class="btn btn-ghost full" id="homeLogoutBtn" type="button" style="display:none;">
+          Sign out
+        </button>
+      </div>
+    </div>
+  </div>
 </section>
-
-
-
 
 
   <!---------- CREATE GAME SCREEN ----------->

@@ -1,65 +1,49 @@
 // public/js/game/home-ui.js
+
 function $(id) {
   return document.getElementById(id);
 }
 
 let bound = false;
 
-// public/js/game/home-ui.js
-function $(id) {
-  return document.getElementById(id);
-}
-
 export function initHomeUI() {
   if (bound) return;
   bound = true;
 
-  const row = $("homeCardsRow");
-  const dotsWrap = $("homeCarouselDots");
-  const joinInput = $("homeJoinCode");
+  // Main actions
+  $("homePlayBtn")?.addEventListener("click", () =>
+    window.showScreen("screen-create"),
+  );
+  $("homeRoomsBtn")?.addEventListener("click", () =>
+    window.showScreen("screen-create"),
+  ); // placeholder for rooms view
+  $("homePracticeBtn")?.addEventListener("click", () =>
+    window.showToast?.("Practice coming soon"),
+  );
 
-  // --- dots + snap index ---
-  if (row && dotsWrap) {
-    const dots = Array.from(dotsWrap.querySelectorAll(".dot"));
+  // Bottom bar placeholders
+  $("homeLeaderboardBtn")?.addEventListener("click", () =>
+    window.showToast?.("Leaderboard coming soon"),
+  );
+  $("homeFriendsBtn")?.addEventListener("click", () =>
+    window.showToast?.("Friends coming soon"),
+  );
 
-    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+  // Top bar placeholders
+  $("homeRulesBtn")?.addEventListener("click", () =>
+    window.showToast?.("Rules coming soon"),
+  );
+  $("homeSettingsBtn")?.addEventListener("click", () =>
+    window.showToast?.("Settings coming soon"),
+  );
 
-    const setActive = () => {
-      const w = row.clientWidth || 1;
-      const idx = clamp(Math.round(row.scrollLeft / w), 0, dots.length - 1);
-      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-    };
-
-    row.addEventListener("scroll", () => requestAnimationFrame(setActive), { passive: true });
-    setActive();
-  }
-
-  // --- allow horizontal swipe even if body is locked ---
-  // (CSS touch-action: pan-x on .home-cards-row is the main fix, but this helps older devices)
-  if (row) row.style.webkitOverflowScrolling = "touch";
-
-  // --- input hygiene ---
-  joinInput?.addEventListener("input", (e) => {
-    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
-  });
-
-  // --- routing ---
-  $("homePlayLiveBtn")?.addEventListener("click", () => {
-    window.showScreen("screen-create");
-  });
-
-  $("homePracticeBtn")?.addEventListener("click", () => {
-    window.showToast?.("Practice mode coming soon");
-  });
-
-  $("homeCreateBtn")?.addEventListener("click", () => {
-    window.showScreen("screen-create");
-  });
-
-  $("homeJoinBtn")?.addEventListener("click", () => {
-    const code = joinInput?.value?.trim();
-    if (code) window.__PREFILL_JOIN_CODE__ = code;
-    window.showScreen("screen-create");
+  // Profile modal open/close
+  $("homeProfileBtn")?.addEventListener("click", () => openProfileModal(true));
+  $("homeProfileCloseBtn")?.addEventListener("click", () =>
+    openProfileModal(false),
+  );
+  $("homeProfileModal")?.addEventListener("click", (e) => {
+    if (e.target === $("homeProfileModal")) openProfileModal(false);
   });
 
   $("homeLogoutBtn")?.addEventListener("click", async () => {
@@ -75,6 +59,13 @@ export function initHomeUI() {
   loadMeIntoHome();
 }
 
+function openProfileModal(open) {
+  const m = $("homeProfileModal");
+  if (!m) return;
+  m.classList.toggle("open", !!open);
+  m.setAttribute("aria-hidden", open ? "false" : "true");
+}
+
 async function loadMeIntoHome() {
   try {
     const r = await fetch("https://api.ellisandcodesigns.co.uk/me", {
@@ -82,46 +73,73 @@ async function loadMeIntoHome() {
     });
     const { user: me } = await r.json();
 
-    const loginBtn = $("homeLoginBtn");
+    const loginBtn = document.getElementById("homeLoginBtn");
 
-    // profile card elements (these DO exist in your new HTML)
-    const profileDesc = $("homeProfileCardDesc");
-    const profileMini = $("homeProfileMini");
-    const logoutBtn = $("homeLogoutBtn");
+    const avatarImg = document.getElementById("homeAvatar");
+    const fallback = document.getElementById("homeAvatarFallback");
 
-    const nameEl = $("homeName");
-    const hintEl = $("homeHint");
-    const avatarEl = $("homeAvatar");
+    // Optional (only if you have a big avatar in the modal)
+    const avatarBig = document.getElementById("homeAvatarBig");
+
+    const nameEl = document.getElementById("homeName");
+    const hintEl = document.getElementById("homeHint");
+    const logoutBtn = document.getElementById("homeLogoutBtn");
 
     if (me) {
-      loginBtn && (loginBtn.style.display = "none");
+      // Top bar
+      if (loginBtn) loginBtn.style.display = "none";
+      if (logoutBtn) logoutBtn.style.display = "inline-flex";
 
-      profileDesc && (profileDesc.textContent = "Signed in");
-      profileMini && (profileMini.style.display = "flex");
-      logoutBtn && (logoutBtn.style.display = "inline-flex");
+      if (nameEl) nameEl.textContent = me.display_name || me.email || "Player";
+      if (hintEl) hintEl.textContent = "Signed in";
 
-      nameEl && (nameEl.textContent = me.display_name || me.email || "Player");
-      hintEl && (hintEl.textContent = "Signed in");
-
-      if (avatarEl) {
-        if (me.avatar_url) {
-          avatarEl.src = me.avatar_url;
-          avatarEl.style.opacity = "1";
+      const url = me.avatar_url || "";
+      if (avatarImg) {
+        if (url) {
+          avatarImg.src = url;
+          avatarImg.style.opacity = "1";
+          if (fallback) fallback.style.display = "none";
         } else {
-          avatarEl.removeAttribute("src");
-          avatarEl.style.opacity = "0";
+          avatarImg.removeAttribute("src");
+          avatarImg.style.opacity = "0";
+          if (fallback) {
+            const letter =
+              (me.display_name && me.display_name.trim()[0]) ||
+              (me.email && me.email.trim()[0]) ||
+              "P";
+            fallback.textContent = String(letter).toUpperCase();
+            fallback.style.display = "block";
+          }
+        }
+      }
+
+      if (avatarBig) {
+        if (url) {
+          avatarBig.src = url;
+          avatarBig.style.opacity = "1";
+        } else {
+          avatarBig.removeAttribute("src");
+          avatarBig.style.opacity = "0";
         }
       }
     } else {
-      loginBtn && (loginBtn.style.display = "flex");
+      if (loginBtn) loginBtn.style.display = "inline-flex";
+      if (logoutBtn) logoutBtn.style.display = "none";
 
-      profileDesc && (profileDesc.textContent = "Sign in to sync stats.");
-      profileMini && (profileMini.style.display = "none");
-      logoutBtn && (logoutBtn.style.display = "none");
+      if (nameEl) nameEl.textContent = "Guest";
+      if (hintEl) hintEl.textContent = "Sign in to sync your profile";
 
-      if (avatarEl) {
-        avatarEl.removeAttribute("src");
-        avatarEl.style.opacity = "0";
+      if (avatarImg) {
+        avatarImg.removeAttribute("src");
+        avatarImg.style.opacity = "0";
+      }
+      if (fallback) {
+        fallback.textContent = "G";
+        fallback.style.display = "block";
+      }
+      if (avatarBig) {
+        avatarBig.removeAttribute("src");
+        avatarBig.style.opacity = "0";
       }
     }
   } catch (e) {

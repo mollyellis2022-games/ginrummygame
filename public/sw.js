@@ -1,7 +1,5 @@
-const CACHE_NAME = "gr-v1";
-const STATIC_CACHE = `static-${CACHE_NAME}`;
+const CACHE_NAME = "gr-static-v4"; // 👈 bump this when you deploy changes
 
-// Keep this list small  important. Runtime cache will pick up the rest.
 const PRECACHE_URLS = [
   "/",
   "/index.html",
@@ -16,18 +14,17 @@ self.addEventListener("install", (event) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
 
-      // Cache sequentially so we can pinpoint failures
+      // Cache sequentially so one bad file doesn't brick install
       for (const url of PRECACHE_URLS) {
         try {
-          const res = await fetch(url, { cache: "reload" });
-          if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-          await cache.put(url, res);
-        } catch (err) {
-          console.error("[SW] Failed to precache:", url, err);
+          const res = await fetch(new Request(url, { cache: "reload" }));
+          if (res.ok) await cache.put(url, res);
+        } catch (e) {
+          // don't fail install
+          console.warn("[SW] precache skipped:", url, e);
         }
       }
 
-      // Optional: ensure SW activates even if some assets failed
       self.skipWaiting();
     })(),
   );
@@ -38,79 +35,64 @@ self.addEventListener("activate", (event) => {
     (async () => {
       const keys = await caches.keys();
       await Promise.all(
-        keys
-          .filter((k) => k.startsWith("static-") && k !== STATIC_CACHE)
-          .map((k) => caches.delete(k)),
+        keys.map((k) => (k === CACHE_NAME ? null : caches.delete(k))),
       );
       await self.clients.claim();
-
-      // Tell open pages to reload (so they pick up new cached JS/CSS)
-      const clients = await self.clients.matchAll({ type: "window" });
-      for (const client of clients) {
-        client.postMessage({ type: "SW_ACTIVATED" });
-      }
     })(),
   );
 });
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
-
-  // Only handle GET
-  if (req.method !== "GET") return;
-
   const url = new URL(req.url);
 
-  // Only same-origin
+  // Only handle same-origin
   if (url.origin !== self.location.origin) return;
 
-  const accept = req.headers.get("accept") || "";
-  const isNavigation = req.mode === "navigate" || accept.includes("text/html");
-
-  const isStaticAsset =
-    url.pathname.endsWith(".js") ||
-    url.pathname.endsWith(".css") ||
-    url.pathname.endsWith(".png") ||
-    url.pathname.endsWith(".webp") ||
-    url.pathname.endsWith(".svg") ||
-    url.pathname.endsWith(".json") ||
-    url.pathname.endsWith(".ico");
-
-  // Handle navigations (HTML) only
-  if (isNavigation) {
+  // ✅ Network-first for navigations (fixes "unstyled after login")
+  if (req.mode === "navigate") {
     event.respondWith(
       (async () => {
         try {
-          const fresh = await fetch(req, { cache: "no-store" });
-          const cache = await caches.open(STATIC_CACHE);
-          cache.put(req, fresh.clone());
-          return fresh;
+          const res = await fetch(req);
+          const cache = await caches.open(CACHE_NAME);
+          cache.put("/index.html", res.clone());
+          return res;
         } catch {
-          // Try exact match, then fallback to index
-          const cached = await caches.match(req);
-          return cached || (await caches.match("/index.html"));
+          const cached = await caches.match("/index.html");
+          return cached || Response.error();
         }
       })(),
     );
     return;
   }
 
-  // Handle static assets only
-  if (isStaticAsset) {
+  // ✅ Stale-while-revalidate for static assets
+  const isStatic =
+    url.pathname.endsWith(".css") ||
+    url.pathname.endsWith(".js") ||
+    url.pathname.endsWith(".png") ||
+    url.pathname.endsWith(".jpg") ||
+    url.pathname.endsWith(".webp") ||
+    url.pathname.endsWith(".svg") ||
+    url.pathname.endsWith(".woff2");
+
+  if (isStatic) {
     event.respondWith(
       (async () => {
-        const cached = await caches.match(req);
-        if (cached) return cached;
+        const cache = await caches.open(CACHE_NAME);
+        const cached = await cache.match(req);
 
-        const fresh = await fetch(req);
-        const cache = await caches.open(STATIC_CACHE);
-        cache.put(req, fresh.clone());
-        return fresh;
+        const fetchPromise = fetch(req)
+          .then((res) => {
+            // Only cache successful, correct-type responses
+            if (res && res.ok) cache.put(req, res.clone());
+            return res;
+          })
+          .catch(() => null);
+
+        return cached || (await fetchPromise) || Response.error();
       })(),
     );
-    return;
   }
-
-  // Everything else: do not intercept (prevents "no-op" overhead)
-  return;
 });
