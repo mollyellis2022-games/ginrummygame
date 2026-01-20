@@ -1,0 +1,168 @@
+/* HAND LAYOUT, CURVE, HOVER/SELECTED, PLACEHOLDERS, GHOSTS */
+
+#screen-game #hand{
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  touch-action: none;
+  overflow: visible;
+  position: absolute;
+  bottom: 10px;
+}
+
+#hand .card {
+  position: relative;
+  margin-right: calc(-1 * var(--hand-overlap));
+  transform-origin: 50% 100%;
+
+  --curve: 0deg;
+  --lift: 0px;
+  --bump: 1;
+
+  transform:
+    translateY(calc(var(--lift, 0px) * var(--curve-scale)))
+    rotate(var(--curve, 0deg))
+    scale(var(--bump));
+
+  transition: transform 160ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+
+#hand .card.bump {
+  --bump: 1.06;
+  --lift: -4px;
+  transition: transform 140ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* Ideal curve: 10–11 cards */
+#hand.size-10 .card:nth-child(1),
+#hand.size-11 .card:nth-child(1) { --curve: -7deg; --lift: -5px; }
+
+#hand.size-10 .card:nth-child(2),
+#hand.size-11 .card:nth-child(2) { --curve: -5deg; --lift: -13px; }
+
+#hand.size-10 .card:nth-child(3),
+#hand.size-11 .card:nth-child(3) { --curve: -3deg; --lift: -19px; }
+
+#hand.size-10 .card:nth-child(4),
+#hand.size-11 .card:nth-child(4) { --curve: -2deg; --lift: -23px; }
+
+#hand.size-10 .card:nth-child(5),
+#hand.size-11 .card:nth-child(5) { --curve: -1deg; --lift: -26px; }
+
+#hand.size-10 .card:nth-child(6),
+#hand.size-11 .card:nth-child(6) { --curve: 1deg; --lift: -26px; }
+
+#hand.size-10 .card:nth-child(7),
+#hand.size-11 .card:nth-child(7) { --curve: 2deg; --lift: -23px; }
+
+#hand.size-10 .card:nth-child(8),
+#hand.size-11 .card:nth-child(8) { --curve: 3deg; --lift: -19px; }
+
+#hand.size-10 .card:nth-child(9),
+#hand.size-11 .card:nth-child(9) { --curve: 5deg; --lift: -13px; }
+
+#hand.size-10 .card:nth-child(10),
+#hand.size-11 .card:nth-child(10) { --curve: 7deg; --lift: -5px; }
+
+#hand.size-10 .card:nth-child(11),
+#hand.size-11 .card:nth-child(11) { --curve: 8deg; --lift: 5px; }
+
+.card:hover {
+  transform:
+    translateY(calc(var(--lift, 0px) * var(--curve-scale) - 8px))
+    rotate(var(--curve, 0deg));
+}
+
+.card.selected {
+  transform:
+    translateY(calc(var(--lift, 0px) * var(--curve-scale) - 14px))
+    rotate(var(--curve, 0deg));
+  z-index: 9999 !important;
+}
+
+#hand.draw-drop-ready {
+  outline: 2px solid rgba(255,255,255,0.22);
+  outline-offset: 8px;
+  border-radius: 12px;
+}
+
+#hand .card.dragging{
+  opacity: 0.15;
+  z-index: 10000 !important;
+}
+
+#hand .drag-placeholder{
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--card-radius);
+  margin-right: calc(-1 * var(--hand-overlap));
+  background: rgba(255,255,255,0.08);
+  border: 2px dashed rgba(255,255,255,0.28);
+  transform: translateY(-6px);
+  box-shadow: none;
+}
+
+#hand .draw-placeholder{
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: 14px;
+  margin-right: calc(-1 * var(--hand-overlap));
+  background: rgba(255,255,255,0.06);
+  border: 2px dashed rgba(255,255,255,0.35);
+  transform: translateY(-6px);
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.hand-drag-ghost{
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 99999;
+  pointer-events: none;
+  transition: none !important;
+  margin: 0 !important;
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.45));
+  user-select: none; -webkit-user-select: none;
+}
+
+.draw-drag-ghost{
+  position: fixed;
+  transition: none !important;
+  left: 0;
+  top: 0;
+  z-index: 99999;
+  pointer-events: none;
+  margin: 0 !important;
+  transform-origin: 50% 50%;
+  transform: translateZ(0) scale(1.06);
+  filter: drop-shadow(0 22px 34px rgba(0,0,0,0.55));
+  user-select: none; -webkit-user-select: none;
+}
+
+.fx-ghost-solid {
+  opacity: 1 !important;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+
+
+    position: relative;
+  width: var(--discard-card-w);
+  height: var(--discard-card-h);
+  border: 1px solid #333;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.39);
+  border-radius: 8px;
+  background: linear-gradient(#fff, #f4f4f4);
+  color: black;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+

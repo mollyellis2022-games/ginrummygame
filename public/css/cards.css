@@ -1,0 +1,90 @@
+/* CARD BASE, CORNER/CENTER, AND RED/BLACK */
+
+.card,
+.card * ,
+.round-overlay-card,
+.round-overlay-card * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+   backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.card,
+.round-overlay-card {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.card {
+  position: relative;
+  width: var(--card-w);
+  height: var(--card-h);
+  border: 1px solid #333;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.39);
+  border-radius: 8px;
+  background: linear-gradient(#fff, #f4f4f4);
+  color: black;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.card .corner, .card .center {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.card.red{ color: #c62828; }
+.card.black{ color: #111; }
+
+.card .corner{
+  position: absolute;
+  font-weight: 700;
+  font-size: 25px;
+}
+
+.card .top-left { top: 2px; left: 4px; }
+
+#discard .discard-slot .corner {
+  font-size: 20px;
+}
+#discard .discard-slot .top-left-suit {
+    top: 20px;
+    left: 4px;
+}
+
+#discard .discard-slot .bottom-right {
+   bottom: -12px;
+    right: 8px;
+    font-size: 60px;
+}
+
+.card .top-left-suit {
+    top: 25px;
+    left: 4px;
+}
+
+.card .bottom-right {
+    font-size: 70px;
+    bottom: -12px;
+    right: 12px;
+}
+
+.card .center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+}
+
+.card .corner,
+.card .center{
+  text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+.card.is-discard-ghost .corner { font-size: 20px; }
+.card.is-discard-ghost .top-left { top: 2px; left: 4px; }
+.card.is-discard-ghost .top-left-suit { top: 20px; left: 4px; }
+.card.is-discard-ghost .bottom-right { bottom: -12px; right: 8px; font-size: 60px; }

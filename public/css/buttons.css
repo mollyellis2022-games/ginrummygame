@@ -1,0 +1,171 @@
+/* =========== public/css/buttons.css ========== */
+
+
+/* =========================
+   Shared action button base
+========================= */
+.primary-btn {
+  width: 100%;
+  max-width: 520px;
+  max-height: 50px;
+  padding: 12px 28px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #7cff3a, #4cd137);
+  color: #1b3a0f;
+  border-radius: 999px;
+  box-shadow: 0 6px 0 #2f8f1f, 0 12px 20px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: none;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.primary-btn:active {
+  box-shadow: 0 3px 0 #2f8f1f, 0 10px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Secondary action (JOIN) */
+.secondary-btn {
+  background: linear-gradient(180deg, #7c55ff, #5b39d9);
+  color: white;
+  padding: 14px 32px;
+  font-size: 18px;
+  box-shadow: 0 6px 0 rgba(60, 40, 140, 0.8), 0 14px 22px rgba(0, 0, 0, 0.35);
+}
+
+.secondary-btn:active {
+  box-shadow: 0 3px 0 rgba(60, 40, 140, 0.8), 0 10px 16px rgba(0, 0, 0, 0.3);
+}
+
+
+/* =========================
+   Points selection buttons
+========================= */
+.points-selection {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.points-btn {
+  min-width: 72px;
+  padding: 14px 0;
+  border-radius: 14px;
+  border: none;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(180deg, #7c55ff, #5b39d9);
+  box-shadow: 0 6px 0 rgba(60, 40, 140, 0.8), 0 14px 22px rgba(0, 0, 0, 0.35);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+.points-btn:hover { filter: brightness(1.1); }
+
+.points-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 rgba(60, 40, 140, 0.8), 0 10px 16px rgba(0, 0, 0, 0.3);
+}
+
+.points-btn.active {
+  background: linear-gradient(180deg, #7cff3a, #4cd137);
+  color: #1b3a0f;
+  box-shadow: 0 6px 0 #2f8f1f, 0 14px 22px rgba(0, 0, 0, 0.35);
+}
+
+/* Have a Code Button */
+.small-btn {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(0, 0, 0, 0.35);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.small-btn:hover { background: rgba(0, 0, 0, 0.45); }
+
+button.disabled { opacity: 0.5; pointer-events: none; }
+
+/* Copy Button */
+#screen-host .copy-btn {
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #caa6ff, #9a7cff);
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#screen-host .copy-btn:hover {
+  background: linear-gradient(180deg, #8b63e3, #7f49a1);
+}
+
+/* Compact action button sizing (used by START / CREATE if desired) */
+.start-game-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 #2f8f1f, 0 8px 12px rgba(0, 0, 0, 0.25);
+}
+
+.start-game-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* START button pulse (when enabled) */
+@keyframes pulseGlow {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1px) scale(1.03); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.start-game-btn.pulse { animation: pulseGlow 0.9s ease-in-out infinite; }
+
+.start-game-btn.pulse {
+  box-shadow: 0 6px 0 #2f8f1f, 0 12px 20px rgba(0, 0, 0, 0.25),
+    0 0 18px rgba(124, 255, 58, 0.35);
+}
+
+/* Exit / leave button */
+.leave-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: rgba(255, 255, 255, 0.85);
+
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+}
+
+.leave-btn:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+}
+
+.leave-btn:active {
+  transform: translateY(1px);
+}
+
+/* Optional danger hint */
+.leave-btn.is-danger {
+  border-color: rgba(255, 120, 120, 0.45);
+  color: rgba(255, 170, 170, 0.95);
+}

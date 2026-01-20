@@ -1,0 +1,249 @@
+/*  public/css/resonsive.css */
+
+@media (max-height: 720px) {
+  
+  #screen-create.screen {
+    padding: 8px;
+    overflow: hidden;
+  }
+
+
+  .lobby-title,
+  .title {
+    font-size: 18px;
+    margin-bottom: 6px;  
+  }
+
+  .seg-btn {
+    padding: 12px 0;
+    font-size: 16px;
+  }
+
+
+  .points-btn {
+    padding: 10px 0;
+    font-size: 16px;
+    min-width: 64px;
+    margin-bottom: -5px;
+  }
+
+
+  .primary-btn {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    padding: 10px 22px;
+    font-size: 16px;
+  }
+
+  .small-btn {
+    padding: 10px 12px;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  .primary-btn,
+.points-btn,
+.seg-btn,
+.small-btn {
+  line-height: 1.1;
+}
+
+}
+
+@media (orientation: landscape) and (max-height: 300px) {
+
+  :root {
+    --card-h: 110px;
+    --card-w: 80px;
+    --discard-card-h: 75px;
+    --discard-card-w: 55px;
+  }
+
+  .game-profile-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .player-anchors .top-left { top: 3%;}
+
+  .center-pile {
+    display: flex;
+    gap: 15px;
+    margin-right: 22%;
+    margin-bottom: 8%;
+}
+
+  #discard .corner {
+    font-size: 15px;
+}
+#discard  .top-left-suit {
+    top: 20px;
+    left: 4px;
+}
+
+#discard .bottom-right {
+   bottom: -12px;
+    right: 6px;
+    font-size: 45px;
+}
+
+.card .top-left-suit {
+    top: 25px;
+    left: 4px;
+}
+
+.card .bottom-right {
+    font-size: 45px;
+    bottom: -12px;
+    right: -20px;
+}
+
+.card .center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+
+  #round-overlay .overlay-card.round-card{
+  max-height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.round-overlay-card .bottom-right {
+  bottom: -10px;
+  right: 4px;
+  font-size: 50px;
+}
+
+
+.turn-indicator-ring {
+  width: 100px;
+  height: 100px;
+}
+
+#turn-indicator {
+  width: 100px;
+  height: 100px;
+}
+
+}
+
+
+@media (orientation: landscape) and (min-height: 600px) {
+
+  :root {
+     --card-h: 150px;
+    --card-w: 100px;
+    --discard-card-h: 120px;
+    --discard-card-w: 80px;
+  }
+
+  
+}
+
+
+@media (orientation: landscape) and (min-height: 620px) {
+  :root {
+     --card-h: 150px;
+    --card-w: 100px;
+    --discard-card-h: 120px;
+    --discard-card-w: 80px;
+  }
+
+ .table-inner {
+  margin-top: -5%;
+ }
+
+  #turn-indicator {
+    width: 180px;
+    height: 180px;
+    top: 40%;
+  }
+
+  .turn-indicator-ring {
+    width: 180px;
+    height: 180px;
+  }
+
+  .game-profile-icon {
+    width: 90px;
+    height: 90px;
+  }
+    
+  #screen-game .table {
+    width: 100%;
+    height: 80%;
+  }
+}
+
+
+
+
+
+
+/* =========================
+   LANDSCAPE MEDIA QUERIES
+========================= */
+@media (orientation: landscape) {
+
+  .room-code-text {
+    font-size: 28px; /* Larger text in landscape */
+  }
+
+  /* Adjust the spacing for mobile devices */
+  .waiting-status {
+    font-size: 20px;
+  }
+}
+
+
+
+/* =========================
+   Mobile tweaks
+========================= */
+@media (max-width: 420px) {
+ 
+
+  #screen-host {
+    width: 100%; /* Ensure full width */
+    padding: 20px;
+  }
+
+  /* Adjust room code container padding and width for small screens */
+  #screen-host .room-code-container {
+    width: 100%;
+    padding: 16px;
+    gap: 14px;
+  }
+
+  /* Make buttons a bit smaller */
+  .start-game-btn {
+    padding: 12px 28px;
+    font-size: 16px;
+  }
+
+  /* Adjust the waiting status text size */
+  .waiting-status {
+    font-size: 18px;
+  }
+}
+
+/* DRAG MUST WIN */
+#deck,
+#discard .card {
+  touch-action: none !important;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deck-pile {
+  position: relative;
+}
+
+
+

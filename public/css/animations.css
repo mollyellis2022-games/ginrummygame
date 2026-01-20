@@ -1,0 +1,487 @@
+/* =========== public/css/animations.css ===========*/
+/* --- Deck entrance  rest angle (wrapper) --- */
+:root {
+  --deck-rest-rot: -8deg;
+  /* “real life” angle while sitting on table */
+}
+
+.deck-wrap {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 60%;
+  /* ORIGINAL resting pose (flat) */
+  transform: translate3d(0, 0, 0) rotate(0deg);
+  opacity: 1;
+  position: relative;
+}
+.deck-wrap.pre-drop {
+  
+  /* Ensure no “deck visible” frame before drop begins */
+  opacity: 0;
+  transform: translate3d(clamp(140px, 22vw, 240px), clamp(-220px, -18vh, -140px), 0)  rotate(-26deg) scale(1.10);
+  
+}
+#deck-wrap::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -10px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  filter: blur(10px);
+  opacity: 0;
+  transform: scaleX(0.85);
+  pointer-events: none;
+  z-index: 0;
+
+}
+
+#deck {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes deckShadowDrop {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.65) translateY(-6px);
+  }
+
+  62% {
+    opacity: 0.35;
+    transform: scaleX(0.92) translateY(-2px);
+  }
+
+  78% {
+    opacity: 0.48;
+    transform: scaleX(1.02) translateY(1px);
+  }
+
+  100% {
+    opacity: 0.22;
+    transform: scaleX(0.92) translateY(0px);
+  }
+
+
+}
+
+.deck-wrap.deck-dropping::after {
+  animation: deckShadowDrop 640ms cubic-bezier(.14, .85, .22, 1) both;
+
+}
+
+/* Staged pose used only during shuffle  deal */
+.deck-wrap.deck-staged {
+  transform: translate3d(0, 0, 0) rotate(var(--deck-rest-rot));
+}
+
+@keyframes deckDropInFromTopRight {
+  0% {
+    transform: translate3d(clamp(140px, 22vw, 240px), clamp(-220px, -18vh, -140px), 0) rotate(-26deg) scale(1.10);
+    opacity: 0;
+
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  /* gravity: accelerate toward the table */
+  62% {
+    transform: translate3d(14px, -10px, 0) rotate(calc(var(--deck-rest-rot) - 6deg)) scale(1.02);
+
+  }
+
+  /* impact: slight overshoot  squash (felt absorbs) */
+  78% {
+    transform: translate3d(6px, 8px, 0) rotate(calc(var(--deck-rest-rot) 1deg)) scaleX(1.03) scaleY(0.97);
+
+  }
+
+  /* rebound */
+  90% {
+    transform: translate3d(-2px, -2px, 0) rotate(calc(var(--deck-rest-rot) - 0.8deg)) scaleX(0.995) scaleY(1.01);
+
+  }
+
+  /* settle */
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--deck-rest-rot)) scale(1);
+    opacity: 1;
+
+  }
+
+}
+
+.deck-wrap.deck-dropping {
+
+  /* “gravity-ish”: slow start, faster end */
+  animation: deckDropInFromTopRight 640ms cubic-bezier(.14, .85, .22, 1) both;
+
+}
+
+@keyframes deckReturnToRest {
+  0% {
+      transform: translate3d(0, 0, 0) rotate(var(--deck-rest-rot)) scale(1);
+    }
+  
+    55% {
+      transform: translate3d(0, 0, 0) rotate(1.4deg) scale(1);
+    }
+  
+    78% {
+      transform: translate3d(0, 1px, 0) rotate(-0.6deg) scaleX(1.01) scaleY(0.99);
+    }
+  
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    }
+}
+
+.deck-wrap.deck-returning {
+  animation: deckReturnToRest 240ms cubic-bezier(.22, .61, .36, 1) both;
+}
+
+/* Deal polish */
+.deal-ghost {
+  backface-visibility: hidden;
+}
+
+.deal-slot {
+  will-change: transform;
+  transform-origin: 50% 50%;
+}
+
+.deal-flip {
+  animation: dealFlip 220ms ease-in-out;
+}
+
+@keyframes dealFlip {
+  0% {
+    transform: scaleX(1);
+  }
+
+  49% {
+    transform: scaleX(0.02);
+  }
+
+  50% {
+    transform: scaleX(0.02);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Lock dealt cards until deal completes */
+.deal-lock {
+  pointer-events: none;
+}
+
+/* --- Realistic shuffle layers that MATCH .card.back exactly --- */
+@keyframes deckShuffleReal {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+
+  14% {
+    transform: translate3d(-2px, 1px, 0) rotate(-2.2deg) scale(0.992);
+  }
+
+  28% {
+    transform: translate3d(3px, -1px, 0) rotate(1.6deg) scale(0.988);
+  }
+
+  44% {
+    transform: translate3d(-3px, 2px, 0) rotate(-1.2deg) scale(0.994);
+  }
+
+  60% {
+    transform: translate3d(2px, -2px, 0) rotate(1.0deg) scale(0.99);
+  }
+
+  78% {
+    transform: translate3d(-1px, 1px, 0) rotate(-0.6deg) scale(0.996);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes deckCutTopA {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  18% {
+    transform: translate3d(7px, -3px, 0) rotate(3deg);
+    opacity: .22;
+  }
+
+  40% {
+    transform: translate3d(-6px, 2px, 0) rotate(-3deg);
+    opacity: .18;
+  }
+
+  72% {
+    transform: translate3d(4px, -1px, 0) rotate(2deg);
+    opacity: .14;
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+@keyframes deckCutTopB {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  22% {
+    transform: translate3d(-6px, 3px, 0) rotate(-3deg);
+    opacity: .18;
+  }
+
+  46% {
+    transform: translate3d(8px, -2px, 0) rotate(4deg);
+    opacity: .22;
+  }
+
+  76% {
+    transform: translate3d(-4px, 1px, 0) rotate(-2deg);
+    opacity: .12;
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+/* Ensure deck is positioning context for overlay packets */
+#deck.card {
+  position: relative;
+}
+
+/* Single source of truth for reshuffling */
+#deck.reshuffling {
+  animation: deckShuffleReal 520ms cubic-bezier(.22, .61, .36, 1);
+  will-change: transform;
+}
+
+/* Packet overlays — mimic .card.back base (gradient  border  inner stroke) */
+#deck.reshuffling::before,
+#deck.reshuffling::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  /* Match .card.back premium background */
+  background-image: url("/assets/card-back-classic.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  border: 1px solid rgba(0, 0, 0, 0.62);
+  
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22), inset 0 0 0 2px rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(124, 255, 58, 0.10);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Dot grid layer like .card.back::before */
+#deck.reshuffling::before {
+  animation: deckCutTopA 320ms cubic-bezier(.22, .61, .36, 1);
+  /* Add the weave pattern layer like .card.back::before */
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.10) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 50% 52%, rgba(124, 255, 58, 0.18), rgba(124, 255, 58, 0) 38%),
+    radial-gradient(circle at 50% 52%, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 52%),
+    radial-gradient(120% 120% at 30% 20%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 45%),
+    radial-gradient(120% 120% at 70% 85%, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(135deg, #6a4bff, #3a28c9 55%, #251a8d);
+  background-size: 10px 10px, 10px 10px, auto, auto, auto, auto, auto;
+}
+
+/* Inner border layer like .card.back::after (approx via inset shadow) */
+#deck.reshuffling::after {
+  animation: deckCutTopB 320ms cubic-bezier(.22, .61, .36, 1);
+  animation-delay: 90ms;
+}
+
+/* Make sure packet overlays sit above the deck face but below deck count */
+#deck.reshuffling::before,
+#deck.reshuffling::after {
+  z-index: 1;
+}
+
+/* Deck count sits above overlays */
+#deck .deck-count {
+  z-index: 2;
+}
+
+
+/* --- Discard top reveal: weighty, readable, safe for single-face card DOM --- */
+@keyframes discardTopReveal2D {
+  0% {
+    transform: translate3d(0, 10px, 0) scale(1.04);
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .22));
+  }
+
+  22% {
+    transform: translate3d(0, 0px, 0) scale(1.00);
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .22));
+  }
+
+  /* "turn over" illusion (like your dealFlip), but slower  weightier */
+  48% {
+    transform: translate3d(0, 0px, 0) scaleX(0.10) scaleY(1.01);
+  }
+
+  58% {
+    transform: translate3d(0, 0px, 0) scaleX(1.00) scaleY(1.00);
+  }
+
+  /* settle */
+  82% {
+    transform: translate3d(0, 2px, 0) scale(1.00);
+  }
+
+  100% {
+    transform: translate3d(0, 0px, 0) scale(1.00);
+    filter: none;
+  }
+}
+
+#discard .card.discard-top-reveal {
+  animation: discardTopReveal2D 640ms cubic-bezier(.2, .9, .2, 1);
+  will-change: transform, filter;
+  transform-origin: 50% 50%;
+}
+
+
+/* perspective makes rotateY read as a “real flip” */
+#discard {
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+}
+
+/* --- Deck count visibility control for realism --- */
+/* --- Deck count visibility control --- */
+#deck.count-hidden .deck-count,  #deck.count-hidden #deck-count{
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes deckCountFadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+#deck.count-reveal .deck-count, #deck.count-reveal #deck-count {
+  visibility: visible;
+  animation: deckCountFadeIn 220ms cubic-bezier(.2, .9, .2, 1);
+}
+
+#discard.gin-slam {
+  animation: ginSlam 520ms cubic-bezier(.12, 1.1, .2, 1);
+}
+
+.gin-shake {
+  animation: ginShake 240ms ease-out;
+}
+
+@keyframes ginSlam {
+  0% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+
+  35% {
+    transform: translateY(4px) scale(1.11);
+    filter: drop-shadow(0 0 26px rgba(124, 255, 58, 0.50));
+  }
+
+  60% {
+    transform: translateY(-2px) scale(0.98);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+}
+
+
+@keyframes ginShake {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  20% {
+    transform: translate3d(-2px, 1px, 0);
+  }
+
+  45% {
+    transform: translate3d(3px, -2px, 0);
+  }
+
+  70% {
+    transform: translate3d(-2px, 2px, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+
+
+@keyframes ginCinematic {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    filter: brightness(1) contrast(1);
+  }
+
+  /* LIFT  BIG PUSH */
+  22% {
+    transform: translate3d(0, -120px, 0) rotate(-10deg) scale(1.8);
+    filter: brightness(1.18) contrast(1.12);
+  }
+
+  /* HOLD (this is what makes it feel dramatic) */
+  38% {
+    transform: translate3d(0, -125px, 0) rotate(-8deg) scale(1.9);
+    filter: brightness(1.22) contrast(1.14);
+  }
+
+  /* DIVE TOWARD TARGET (fast) */
+  78% {
+    transform: translate3d(calc(var(--dx) * 0.92),
+        calc(var(--dy) * 0.92 - 14px),
+        0) rotate(7deg) scale(1.15);
+    filter: brightness(1.10) contrast(1.08);
+  }
+
+  /* IMPACT SETTLE */
+  100% {
+    transform: translate3d(var(--dx), var(--dy), 0) rotate(0deg) scale(1);
+    filter: brightness(1.05) contrast(1.05);
+  }
+}

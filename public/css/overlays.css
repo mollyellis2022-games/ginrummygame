@@ -1,0 +1,581 @@
+/* ROUND OVERLAY, MODALS & MATCH OVERLAY */
+
+
+#round-overlay {
+  will-change: opacity, transform;
+  transform: translate3d(0, 8px, 0);
+  transition: opacity 260ms cubic-bezier(.16, 1, .3, 1),
+    transform 260ms cubic-bezier(.16, 1, .3, 1),
+    visibility 0s linear 260ms;
+}
+
+#round-overlay:not(.hidden) {
+  transform: translate3d(0, 0, 0);
+  transition: opacity 260ms cubic-bezier(.16, 1, .3, 1),
+    transform 260ms cubic-bezier(.16, 1, .3, 1),
+    visibility 0s;
+}
+
+/* optional: slightly snappier pop for reveal */
+#round-overlay .round-overlay-card{
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+}
+
+#round-overlay.overlay{
+  position: fixed;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  z-index: 10000;
+  width: 100%;
+  inset: 0;
+}
+
+.overlay-card {
+  position: relative;
+  display: flex;
+  width: 100%;
+  padding: 20px;
+  align-items: stretch;
+}
+
+.round-panel {
+  width: 88%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 20px;
+   box-shadow:
+    0 18px 40px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.92);
+  min-height: 360px;
+   align-items: stretch;
+}
+
+.round-panel-row {
+  min-height: 140px;
+  display: flex;
+  justify-content:stretch;
+  border-bottom: 1px solid rgba(255,255,255,0.14);
+  text-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+ .round-panel-row-title{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.14);
+  text-align: center;
+  align-items: center;
+}
+
+.round-panel-row-bottom {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.deadwood-title {
+  border-right: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.92);
+  width: 40%;
+  padding: 10px;
+  font-weight: 600;
+  font-family: system-ui;
+}
+
+.melds-title {
+  width: 60%;
+  font-weight: 600;
+  font-family: system-ui;
+  padding: 10px;
+}
+
+#deadwood-area {
+  border-right: 1px solid rgba(255,255,255,0.14);
+  padding: 30px;
+}
+
+.opp-meld-area {
+  display: flex;
+  padding: 30px;
+  padding-left: 5px;
+  justify-content: flex-start;
+}
+
+#you-deadwood-area {
+  border-right: 1px solid rgba(255,255,255,0.14);
+  padding: 30px;
+  position: relative;
+}
+
+.you-meld-area {
+  display: flex;
+  padding: 30px;
+  padding-left: 5px;
+  justify-content: flex-start;
+}
+
+#deadwood-area,
+#you-deadwood-area{
+  display: flex;
+  justify-content: flex-start;/* centers the whole strip */
+  align-items: center;
+  min-width: 30%;
+}
+
+#deadwood-area .deadwood-strip,
+#you-deadwood-area .deadwood-strip{
+  display: flex;
+  justify-content: flex-start; /* cards reveal L->R */
+  align-items: center;
+}
+
+
+
+
+/* =========================
+   Card base styles
+   ========================= */
+
+.round-overlay-card {
+ position: relative;
+  width: 60px;
+  height: 80px;
+  border: 1px solid #333;
+  margin-right: -20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.39);
+  border-radius: 8px;
+  background: linear-gradient(#fff, #f4f4f4);
+  color: black;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+
+.round-overlay-card.red{
+  color: #c62828;
+}
+
+.round-overlay-card.black{
+  color: #111;
+}
+
+.round-overlay-card .corner {
+  position: absolute;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.round-overlay-card .top-left { top: 2px; left: 4px; }
+
+.round-overlay-card .top-left-suit {
+   top: 20px;
+    left: 4px;
+}
+.round-overlay-card .bottom-right {
+  bottom: -10px;
+  right: 4px;
+  font-size: 60px;
+}
+
+.round-overlay-card .center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+}
+
+.round-overlay-card .corner,
+.round-overlay-card .center{
+  text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+.meld-inner-gap {
+  margin-right: 8px;
+}
+
+.round-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  margin-left: 10px;
+}
+
+.player-profile {
+  margin-left: 20px;
+}
+
+.player2-icon {
+  margin-top: 25px;
+}
+
+.profile-icon {
+  width: 75px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  color: rgba(255,255,255,0.92);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+  position: relative;
+}
+
+.player-profile.dim .profile-icon{
+  opacity: 0.55;
+  filter: saturate(0.85);
+}
+
+
+.icon-points {
+  margin-top: 5px;
+  width: 70px;
+  height: 30px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  color: rgba(255,255,255,0.92);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+}
+
+/* =========================
+   POINTS PILL
+ ========================= */
+
+#round-overlay .round-meta{
+  position: absolute;
+  inset: 0;                    /* fill the circle */
+  display: none;
+  place-items: center;          /* center the pill */
+  z-index: 3;
+}
+
+#round-overlay .pill{
+  width: 46px;           /* keep it a perfect circle */
+  height: 46px;
+  padding: 0;            /* circle sizing handled by width/height */
+  border-radius: 999px;
+
+  font-weight: 950;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  /* brighter “glass” */
+  background: linear-gradient(180deg,
+    rgba(30,30,30,0.88),
+    rgba(0,0,0,0.72)
+  );
+
+  /* crisp rim + drop */
+  box-shadow:
+    0 14px 30px rgba(0,0,0,0.55),
+    inset 0 0 0 2px rgba(255,255,255,0.22),
+    inset 0 0 0 5px rgba(124,255,58,0.18);
+
+  /* ensures the glow doesn’t get clipped by anything */
+  isolation: isolate;
+  z-index: 4;
+}
+
+#round-overlay .pill span{
+  font-weight: 1000;
+  font-size: 18px;
+}
+
+
+
+/* strong outer ring glow */
+#round-overlay .pill::after{
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border-radius: 999px;
+  box-shadow:
+    0 0 18px rgba(124,255,58,0.75),
+    0 0 40px rgba(124,255,58,0.35);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+#round-overlay .round-meta.show .pill::after{
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+#round-overlay .leaveGameBtn {
+  position: absolute;
+  right: 5px;
+  top: 10px;
+}
+
+.leaveGameBtn button {
+  padding: 9px 12px;
+  border-radius: 12px;
+
+  background: rgba(0,0,0,0.42);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.92);
+
+  box-shadow:
+    0 12px 26px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.10);
+
+  font-weight: 800;
+  letter-spacing: 0.4px;
+
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+
+.leaveGameBtn button:hover{
+  transform: translateY(-1px);
+}
+
+.leaveGameBtn button:active{
+  transform: translateY(0px) scale(0.98);
+}
+
+/* =========================
+   Round reveal animations
+   ========================= */
+
+/* Start hidden; JS reveals by removing .hidden (same as before) */
+/* Fade-friendly hide (NO display:none) */
+#round-overlay.hidden{
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Cards will be animated with inline styles, but these help smoothness */
+#round-overlay .round-overlay-card{
+  will-change: transform, opacity;
+}
+
+/* Pill hidden until the end, then pops */
+#round-overlay .round-meta{
+  display: none;
+}
+
+#round-overlay .round-meta.show{
+  display: grid;
+  animation: rrPillPop 420ms cubic-bezier(.16,1.2,.2,1) both;
+}
+
+.player-profile.dim .icon-points{
+  opacity: 0.65;
+}
+
+@keyframes rrPillPop{
+  0%   { transform: scale(0.55) rotate(-10deg); opacity: 0; }
+  55%  { transform: scale(1.18) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+
+/* Score badge "bump" when updated */
+.rr-score-bump{
+  animation: rrScoreBump 260ms cubic-bezier(.2,.9,.2,1);
+}
+@keyframes rrScoreBump{
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* temp bubble that pops on card then flies */
+.rr-pill-ghost{
+  position: fixed;
+  z-index: 25000;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  will-change: transform, opacity;
+  
+   width: 46px;           /* keep it a perfect circle */
+  height: 46px;
+  padding: 0;            /* circle sizing handled by width/height */
+  border-radius: 999px;
+
+  font-weight: 950;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* brighter “glass” */
+  background: linear-gradient(180deg,
+    rgba(30,30,30,0.88),
+    rgba(0,0,0,0.72)
+  );
+
+  /* crisp rim + drop */
+  box-shadow:
+    0 14px 30px rgba(0,0,0,0.55),
+    inset 0 0 0 2px rgba(255,255,255,0.22),
+    inset 0 0 0 5px rgba(124,255,58,0.18);
+
+  /* ensures the glow doesn’t get clipped by anything */
+  isolation: isolate;
+}
+
+.rr-pill-ghost::after {
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border-radius: 999px;
+  box-shadow:
+    0 0 18px rgba(124,255,58,0.75),
+    0 0 40px rgba(124,255,58,0.35);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.pop.rr-pill-ghost::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.rr-pill-ghost .pill {
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* stage 1: pop in */
+.rr-pill-ghost.pop{
+  opacity: 1;
+  transition: transform 260ms cubic-bezier(.16,1.2,.2,1), opacity 120ms ease;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+
+/* stage 2: fly */
+.rr-pill-ghost.fly{
+  transition: transform 1100ms cubic-bezier(.22,1,.36,1);
+}
+
+/* Drop on points icon */
+.rr-pill-ghost.drop{
+  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* stage 3: land/fade */
+.rr-pill-ghost.done{
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+
+
+/* ===== Modal ===== */
+.modal.hidden { display: none; }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 250000; /* above overlays/ghosts */
+}
+
+.modal-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.62);
+  backdrop-filter: blur(6px);
+}
+
+.modal-card{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 28px));
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  background: rgba(0,0,0,0.72);
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: 0 22px 50px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.94);
+}
+
+.modal-body{
+  font-size: 13px;
+  opacity: 0.9;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.modal-actions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn{
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.35);
+  color: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.10);
+}
+
+.btn-ghost:hover{
+  transform: translateY(-1px);
+}
+
+.btn-danger{
+  border-color: rgba(255,80,80,0.35);
+  background: rgba(255,80,80,0.14);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,80,80,0.20);
+}
+
+.btn-danger:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* nice pop */
+.modal:not(.hidden) .modal-card{
+  animation: modalPop 240ms cubic-bezier(.2,.9,.2,1);
+}
+@keyframes modalPop{
+  0%{ transform: translate(-50%,-50%) scale(0.92); opacity: 0; }
+  100%{ transform: translate(-50%,-50%) scale(1); opacity: 1; }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  #round-overlay,
+  #match-overlay.overlay {
+    transition: none !important;
+    transform: none !important;
+  }
+}

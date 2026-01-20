@@ -1,0 +1,138 @@
+/* ========== public/css/deck-discard.css ========== */
+ #deck-wrap {
+  height: var(--discard-card-h);
+  width: var(--discard-card-w);
+  
+}
+
+  #deck.card {
+  height: 100%;
+  width: 100%;
+  
+}
+
+
+.card.back{
+    /* Image back (classic ornate vibe) */
+    /* fallback while image loads */
+  background-image: url("/assets/card-back-classic.webp");
+  background-color: #f34954;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  box-shadow:
+     0 10px 26px rgba(0, 0, 0, 0.48),
+     inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.card.back .deck-count {
+  /* keep your count styling, but let the back art show through a bit */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  
+}
+
+.deck-count {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  z-index: 5;
+}
+
+
+/* noop; prevents weird UA marker edge cases */
+#deck, #discard, .discard-slot, .card.back {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+
+
+#discard .card, #deck.card {
+   --curve: -1deg;
+  --lift: 2px;
+  --bump: 1;
+
+  transform:
+    translateY(calc(var(--lift, 0px) * var(--curve-scale)))
+    rotate(var(--curve, 0deg))
+    scale(var(--bump));
+}
+
+#deck.card {
+  --lift: -1px;
+}
+
+
+
+/* Discard pile */
+#discard, .discard-slot { touch-action: manipulation; }
+
+.discard-slot.empty {
+  background: transparent;
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,0.05);
+}
+
+#discard{
+  position: relative;
+  width: var(--discard-card-w);
+  height: var(--discard-card-h);
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+#discard::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  transform: translate(3px, 3px);
+  background: rgba(0,0,0,0.25);
+  filter: blur(2px);
+  z-index: 0;
+}
+
+#discard.drop-ready::after{
+  content: "DROP TO DISCARD";
+  position: absolute;
+  left: 50%;
+  top: -34px;
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 1px;
+  background: rgba(0,0,0,0.55);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.18);
+  color: white;
+  pointer-events: none;
+  opacity: 1;
+}
+
+#discard.drop-ready{
+  transform: translateY(-2px) scale(1.03);
+  filter: drop-shadow(0 0 18px rgba(124,255,58,0.45));
+}
+
+#discard .card{
+  position: relative;
+  z-index: 1;
+  width: var(--discard-card-w);
+  height: var(--discard-card-h);
+}
+
+
+.card.back.clickable{
+  cursor: pointer;
+  animation: deckPulse 1.4s ease-in-out infinite;
+}

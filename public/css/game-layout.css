@@ -1,0 +1,143 @@
+/* GAME SHELL, TABLE LAYOUT, PLLAYER ANCHORS AND PROFILES */
+
+#screen-game {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+
+
+#screen-game::before{
+  content:"";
+  position: absolute;
+  inset: 0;
+  background: url("/assets/backgrounds/GameBg.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 1;            
+  z-index: 0;
+  pointer-events: none;
+}
+
+#screen-game .game-shell{
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  z-index: 1;
+   background-image: url("/assets/backgrounds/GameTable.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+}
+
+
+/* Player Profile Icons */
+.player-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.player-anchors {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.player-anchors .player-seat {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Player 3 */
+.player-anchors .seat-top { top: 0; left: 50%; transform: translateX(-50%);  }
+
+/* You */
+.player-anchors .seat-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+/* player 4 */
+.player-anchors .seat-right { right: 0; bottom: 60%; }
+
+/* Player 2  */
+.player-anchors .seat-left { left: 0; bottom: 60%; }
+
+.game-player-profile.active .game-profile-icon {
+  box-shadow:
+    0 0 0 3px rgba(124,255,58,0.9),
+    0 0 22px rgba(124,255,58,0.6);
+}
+
+.game-player-profile.inactive{
+  opacity: 0.6;
+  filter: saturate(0.85);
+}
+
+.game-player-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  gap: 2px;
+}
+
+.game-profile-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.8);
+  border: 2px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
+  color: white;
+}
+
+
+#screen-game .table{
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+   position: absolute;
+}
+
+.table-inner {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  min-height: 0;
+    overflow: visible;
+      /* allow deck drop-in from outside bounds */
+}
+
+
+.center-pile {
+    display: flex;
+    gap: 15px;
+    margin-right: 22%;
+    margin-bottom: 6%;
+    overflow: visible;
+}
