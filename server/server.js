@@ -264,17 +264,22 @@ const wss = new WebSocket.Server({
 
       if (!allowed.has(origin)) return done(false, 401, "Origin not allowed");
 
-      // OPTIONAL: require sign-in for WS connections
-      // If you want guests allowed for now, comment this whole block out.
+      // Optional auth: attach req.user if session exists, but allow guests
       const cookies = cookie.parse(info.req.headers.cookie || "");
       const sid = cookies.sid;
 
       if (sid) {
-        const user = await getUserBySessionId(sid);
-        if (user) info.req.user = user;
+        try {
+          const user = await getUserBySessionId(sid);
+          if (user) info.req.user = user;
+        } catch (e) {
+          console.log(
+            "WS session lookup failed (allowing guest):",
+            e?.message || e,
+          );
+        }
       }
 
-      // Always allow the connection (origin is still enforced)
       return done(true);
     } catch (e) {
       console.error("verifyClient error:", e);
@@ -651,14 +656,20 @@ function makeRoom({ code, playersNeeded = 2, targetScore = 10 }) {
   }
 
   function sendRoomUpdate() {
-    // Used by lobby UI to show how many players joined and when host can start.
     broadcast({
       type: "room_update",
       code: room.code,
       joined: room.sockets.length,
       needed: room.playersNeeded,
+      players: room.sockets.map((s, i) => ({
+        playerId: i,
+        id: s.user?.id || s.guestId,
+        display_name: s.user?.display_name || "Guest",
+        avatar_url: s.user?.avatar_url || null,
+      })),
     });
   }
+
 
   /* -------------------------- Round lifecycle / deal ----------------------- */
   function startRound() {
@@ -1079,7 +1090,12 @@ function removeSocketFromRoom(ws) {
 
 wss.on("connection", (ws, req) => {
   // Note: verifyClient already checks Origin, this is extra logging/defense.
-   ws.user = req.user || null;
+  ws.user = req.user || null;
+  ws.guestId = ws.user
+    ? null
+    : `guest_${crypto.randomBytes(6).toString("hex")}`;
+  ws.displayName = ws.user?.display_name || "Guest";
+
 
    const origin = req.headers.origin;
   console.log("WS connection attempt, origin =", origin);
@@ -1142,7 +1158,7 @@ wss.on("connection", (ws, req) => {
       room.sockets.push(ws);
 
       // init => client learns its playerId (drives seat/turn UI)
-      safeSend(ws, { type: "init", playerId: 0 });
+      safeSend(ws, { type: "init", playerId: ws.playerId, me: ws.user });
       room.sendRoomUpdate();
       return;
     }
@@ -1168,7 +1184,18 @@ wss.on("connection", (ws, req) => {
       ws.playerId = room.sockets.length;
       room.sockets.push(ws);
 
-      safeSend(ws, { type: "init", playerId: ws.playerId });
+      safeSend(ws, {
+        type: "init",
+        playerId: ws.playerId,
+        profile: ws.user
+          ? {
+              id: ws.user.id,
+              display_name: ws.user.display_name,
+              avatar_url: ws.user.avatar_url,
+            }
+          : { id: ws.guestId, display_name: "Guest", avatar_url: null },
+      });
+
       safeSend(ws, { type: "join_ok", code });
 
       room.sendRoomUpdate();
