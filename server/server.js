@@ -17,7 +17,7 @@ const WebSocket = require("ws");
 const Rooms = require("./rooms");
 const crypto = require("crypto");
 const cookie = require("cookie");
-const mysql = require("mysql2/promise");
+const { Pool } = require("pg");
 const { OAuth2Client } = require("google-auth-library");
 
 
@@ -28,15 +28,11 @@ const server = http.createServer(app);
 app.get("/health", (req, res) => res.status(200).send("ok"));
 
 // -------------------- MySQL (IONOS) --------------------
-const db = mysql.createPool({
-  host: process.env.DB_HOST,                 // e.g. 19438372.hosting-data.io
-  port: Number(process.env.DB_PORT || 3306),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // common for managed Postgres; Supabase supports SSL :contentReference[oaicite:5]{index=5}
 });
+
 
 // -------------------- Google OAuth --------------------
 // IMPORTANT: set these env vars on Northflank later:
@@ -68,29 +64,31 @@ function buildSessionCookie() {
 
 async function createSession(userId) {
   const sid = newSessionId();
-  await db.execute(
-    "INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY))",
-    [sid, userId]
+  await db.query(
+    "insert into sessions (id, user_id, expires_at) values ($1, $2, now() + interval '30 days')",
+    [sid, userId],
   );
   return sid;
 }
 
+
 async function getUserBySessionId(sid) {
-  const [rows] = await db.execute(
+  const { rows } = await db.query(
     `
-    SELECT u.id, u.email, p.display_name, p.avatar_url
-    FROM sessions s
-    JOIN users u ON u.id = s.user_id
-    JOIN profiles p ON p.user_id = u.id
-    WHERE s.id = ?
-      AND s.revoked_at IS NULL
-      AND s.expires_at > NOW()
-    LIMIT 1
+    select u.id, u.email, p.display_name, p.avatar_url
+    from sessions s
+    join users u on u.id = s.user_id
+    join profiles p on p.user_id = u.id
+    where s.id = $1
+      and s.revoked_at is null
+      and s.expires_at > now()
+    limit 1
     `,
-    [sid]
+    [sid],
   );
   return rows[0] || null;
 }
+
 
 function requireEnv(name) {
   if (!process.env[name]) throw new Error(`Missing env var: ${name}`);
@@ -108,6 +106,7 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
 });
+
 
 
 // -------------------- Auth routes --------------------
@@ -144,39 +143,49 @@ app.get("/auth/google/callback", async (req, res) => {
     const name = payload.name || "Player";
     const picture = payload.picture || null;
 
-    // Upsert user
     let userId = null;
 
-    const [bySub] = await db.execute("SELECT id FROM users WHERE google_sub = ? LIMIT 1", [googleSub]);
-    if (bySub[0]) {
-      userId = bySub[0].id;
-      await db.execute("UPDATE users SET last_login_at = NOW() WHERE id = ?", [userId]);
+    // 1) Try by google_sub
+    const bySub = await db.query(
+      "select id from users where google_sub = $1 limit 1",
+      [googleSub]
+    );
+
+    if (bySub.rows[0]) {
+      userId = bySub.rows[0].id;
+      await db.query("update users set last_login_at = now() where id = $1", [userId]);
     } else {
-      const [byEmail] = await db.execute("SELECT id FROM users WHERE email = ? LIMIT 1", [email]);
-      if (byEmail[0]) {
-        userId = byEmail[0].id;
-        await db.execute(
-          "UPDATE users SET google_sub = ?, last_login_at = NOW() WHERE id = ?",
+      // 2) Try by email (link account)
+      const byEmail = await db.query(
+        "select id from users where email = $1 limit 1",
+        [email]
+      );
+
+      if (byEmail.rows[0]) {
+        userId = byEmail.rows[0].id;
+        await db.query(
+          "update users set google_sub = $1, last_login_at = now() where id = $2",
           [googleSub, userId]
         );
       } else {
-        const [ins] = await db.execute(
-          "INSERT INTO users (email, google_sub, last_login_at) VALUES (?, ?, NOW())",
+        // 3) Create new user
+        const ins = await db.query(
+          "insert into users (email, google_sub, last_login_at) values ($1, $2, now()) returning id",
           [email, googleSub]
         );
-        userId = ins.insertId;
+        userId = ins.rows[0].id;
 
         const displayName = String(name).slice(0, 50);
-        await db.execute(
-          "INSERT INTO profiles (user_id, display_name, avatar_url) VALUES (?, ?, ?)",
+        await db.query(
+          "insert into profiles (user_id, display_name, avatar_url) values ($1, $2, $3)",
           [userId, displayName, picture]
         );
       }
     }
 
-    // Ensure profile exists (in case of linking an old user)
-    await db.execute(
-      "INSERT IGNORE INTO profiles (user_id, display_name, avatar_url) VALUES (?, ?, ?)",
+    // Ensure profile exists (if linking an old user that didn't have one)
+    await db.query(
+      "insert into profiles (user_id, display_name, avatar_url) values ($1, $2, $3) on conflict (user_id) do nothing",
       [userId, String(name).slice(0, 50), picture]
     );
 
@@ -195,7 +204,7 @@ app.post("/auth/logout", express.json(), async (req, res) => {
   const sid = cookies.sid;
 
   if (sid) {
-    await db.execute("UPDATE sessions SET revoked_at = NOW() WHERE id = ? LIMIT 1", [sid]);
+    await db.query("update sessions set revoked_at = now() where id = $1", [sid]);
     res.setHeader(
       "Set-Cookie",
       "sid=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
@@ -214,6 +223,7 @@ app.get("/me", async (req, res) => {
   const user = await getUserBySessionId(sid);
   return res.status(200).json({ user });
 });
+
 
 
 
