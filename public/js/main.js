@@ -1,3 +1,6 @@
+// public/js/main.js
+import { initHomeUI } from "./game/home-ui.js";
+
 window.showScreen?.("screen-loading");
 
 const isLocalDevHost =
@@ -64,7 +67,6 @@ async function loadMe() {
 
 loadMe();
 
-
 const socket = new WebSocket(WS_URL);
 window.socket = socket;
 
@@ -106,3 +108,5 @@ if (!isLocalDevHost && "serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(console.error);
   });
 }
+
+initHomeUI();

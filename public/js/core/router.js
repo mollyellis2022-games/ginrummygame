@@ -1,8 +1,9 @@
-// public/js/core/router.js
+// router.js
+export function showScreen(id) {
+  document.querySelectorAll(".screen").forEach((s) => {
+    s.style.display = "none";
+  });
 
-window.showScreen = function (screenId) {
-  document
-    .querySelectorAll(".screen")
-    .forEach((el) => el.classList.add("hidden"));
-  document.getElementById(screenId)?.classList.remove("hidden");
-};
+  const el = document.getElementById(id);
+  if (el) el.style.display = "block";
+}
