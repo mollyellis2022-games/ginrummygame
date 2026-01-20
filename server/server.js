@@ -9,7 +9,6 @@
  * Client compatibility targets (socket-handler.js):
  * - Outgoing server messages: init, room_update, join_ok, join_error, game_start, state, round_reveal, timeout_discard
  * - Incoming client actions: draw-deck, draw-discard, discard, gin, rematch, hand_order (+ supported aliases)
-
  */
 
 const express = require("express");
