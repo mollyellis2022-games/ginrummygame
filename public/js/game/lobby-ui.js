@@ -260,6 +260,24 @@ window.bindUIActions = function bindUIActions() {
     window.showScreen("screen-create");
   });
 
+  document
+    .getElementById("createBackHomeBtn")
+    ?.addEventListener("click", () => {
+      window.showScreen("screen-home");
+    });
+
+  document.getElementById("hostBackBtn")?.addEventListener("click", () => {
+    window.showScreen("screen-create");
+  });
+
+  document
+    .getElementById("backToCreateBtnDup")
+    ?.addEventListener("click", () => {
+      document.getElementById("backToCreateBtn")?.click();
+    });
+
+
+
   document.getElementById("goJoinBtn")?.addEventListener("click", () => {
     window.showScreen("screen-join");
   });

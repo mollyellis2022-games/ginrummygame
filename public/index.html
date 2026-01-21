@@ -129,24 +129,43 @@
 
 
   <!---------- CREATE GAME SCREEN ----------->
+<div id="screen-create" class="screen hidden app-chrome">
 
-    <div id="screen-create" class="screen hidden screen--pattern">
+  <!-- TOP BAR (IDENTICAL TO HOME) -->
+  <header class="home-appbar">
+    <div class="appbar-left">
+      <button class="home-profile-btn" id="createProfileBtn" type="button">
+        <span class="home-game-profile-icon">
+          <img id="createAvatar" alt="" />
+          <span class="home-avatar-fallback" id="createAvatarFallback">G</span>
+        </span>
+      </button>
 
-      <div id="profileChip" style="display:none; align-items:center; gap:10px;">
-        <img id="profileAvatar" width="32" height="32" style="border-radius:50%; display:none;" />
-         <span id="profileName"></span>
-        <a id="logoutLink" href="#" style="font-size:12px;">Log out</a>
-      </div>
+      <a class="signin-inline"
+         href="https://api.ellisandcodesigns.co.uk/auth/google/start"
+         id="createLoginBtn">Sign in</a>
+    </div>
 
-      <a id="loginLink" href="https://api.ellisandcodesigns.co.uk/auth/google/start">
-  Sign in with Google
-      </a>
+    <div class="appbar-center">
+      <img class="appbar-logo" src="/assets/icons/icon-192.png" alt="" />
+      <span class="appbar-title">Rooms</span>
+    </div>
 
+    <div class="appbar-right">
+      <button class="icon-ghost">?</button>
+      <button class="icon-ghost">⚙</button>
+    </div>
+  </header>
 
+  <!-- MAIN -->
+  <main class="ui-stack">
+    <div class="ui-card">
+      
+
+      <div class="ui-card-title">Create Room</div>
+      <div class="ui-card-sub">Choose players and target score.</div>
 
       <div class="lobby-stack">
-        <div class="lobby-title">Select Players</div>
-      
         <div class="segmented">
           <button id="players2Btn" class="seg-btn active">2</button>
           <button id="players4Btn" class="seg-btn">4</button>
@@ -154,76 +173,141 @@
 
         <div class="pill points-pill">
           <div class="pill-text">POINTS TARGET</div>
-
-          <div class="pill-points" role="tablist" aria-label="Points target">
-            <button class="points-btn" id="points10Btn" type="button">10</button>
-            <button class="points-btn" id="points50Btn" type="button">50</button>
-            <button class="points-btn" id="points100Btn" type="button">100</button>
+          <div class="pill-points">
+            <button id="points10Btn" class="points-btn">10</button>
+            <button id="points50Btn" class="points-btn">50</button>
+            <button id="points100Btn" class="points-btn">100</button>
           </div>
-
-          <div class="pill-suit" aria-hidden="true">♠</div>
+          <div class="pill-suit">♠</div>
         </div>
 
-
-        
-        <button id="createGameBtn" class="create-game-btn primary-btn">CREATE</button>
-
-        <button id="goJoinBtn" class="small-btn" type="button">Have a code? Join</button>
-      
+        <button id="createGameBtn" class="btn btn-primary">Create</button>
+        <button id="createBackHomeBtn" class="btn btn-ghost full" type="button">
+        ← Back
+      </button>
+        <button id="goJoinBtn" class="btn btn-secondary">Have a code? Join</button>
       </div>
     </div>
+  </main>
 
-
-  <!-- WAITING ROOM (Host) -->
-
-<div id="screen-host" class="screen hidden screen--pattern">
-
-  <div class="room-code-container">
-
-    <div id="playerCountText" class="player-count-text">Players: 1/2</div>
-    <div id="player-title"></div>
-     
-
-   <div id="roomCodeSection" class="room-code-row">
-      <div class="room-code-text">ROOM&nbsp;CODE:</div>
-
-      <div class="code-box">
-        <div id="roomCodeText" class="room-code"></div>
-        <button id="copyCodeBtn" class="copy-btn">Copy</button>
-      </div>
-   </div>
-
-    <p id="waitingStatus" class="waiting-status">Waiting for players to join...</p>
-
-    <button id="startGameBtn" class="primary-btn start-game-btn hidden" disabled>START</button>
-
-  </div>
-  
+  <!-- BOTTOM BAR (IDENTICAL TO HOME) -->
+  <nav class="home-tabbar">
+    <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
+    <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
+  </nav>
 </div>
 
 
-  <!---------- JOIN SCREEN ----------->
 
-  <div id="screen-join" class="screen hidden screen--pattern">
+<!-- WAITING ROOM (Host) -->
 
-    <div class="join-card">
+<div id="screen-host" class="screen hidden app-chrome">
 
-      <h2 class="title">Join Game</h2>
+  <header class="home-appbar">
+    <div class="appbar-left">
+      <button class="home-profile-btn">
+        <span class="home-game-profile-icon">
+          <span class="home-avatar-fallback">G</span>
+        </span>
+      </button>
+    </div>
 
-      <div class="room-code-row">
-        <label class="join-label" for="joinCodeInput">ENTER CODE</label>
+    <div class="appbar-center">
+      <img class="appbar-logo" src="/assets/icons/icon-192.png" />
+      <span class="appbar-title">Room</span>
+    </div>
 
-        <div class="enter-code-box">
-         <input class="code-input" id="joinCodeInput" type="text" placeholder="XXXXXX" maxlength="6">
+    <div class="appbar-right">
+      <button class="icon-ghost">?</button>
+      <button class="icon-ghost">⚙</button>
+    </div>
+  </header>
+
+  <main class="ui-stack">
+    <div class="ui-card">
+
+      <div class="ui-card-title">Room Code</div>
+      <div class="ui-card-sub" id="playerCountText">Players: 1/2</div>
+
+      <div id="roomCodeSection" class="room-code-row">
+        <div class="room-code-text">ROOM CODE</div>
+        <div class="code-box">
+          <div id="roomCodeText" class="room-code"></div>
+          <button id="copyCodeBtn" class="btn btn-secondary">Copy</button>
         </div>
       </div>
 
-      <button id="joinGameBtn" class="primary-btn">JOIN</button>
-      <button id="backToCreateBtn" class="small-btn" type="button">Back</button>
+      <p id="waitingStatus" class="waiting-status">Waiting for players…</p>
 
+      <button id="startGameBtn"
+              class="btn btn-primary"
+              style="display:none;"
+              disabled>
+        Start
+      </button>
+
+      <!-- BACK (inside content) -->
+      <button id="hostBackBtn" class="btn btn-ghost full">← Back</button>
+    </div>
+  </main>
+
+  <nav class="home-tabbar">
+    <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
+    <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
+  </nav>
+</div>
+
+
+<!---------- JOIN SCREEN ----------->
+<div id="screen-join" class="screen hidden app-chrome">
+
+  <header class="home-appbar">
+    <div class="appbar-left">
+      <button class="home-profile-btn">
+        <span class="home-game-profile-icon">
+          <span class="home-avatar-fallback">G</span>
+        </span>
+      </button>
     </div>
 
-  </div>
+    <div class="appbar-center">
+      <img class="appbar-logo" src="/assets/icons/icon-192.png" />
+      <span class="appbar-title">Join Room</span>
+    </div>
+
+    <div class="appbar-right">
+      <button class="icon-ghost">?</button>
+      <button class="icon-ghost">⚙</button>
+    </div>
+  </header>
+
+  <main class="ui-stack">
+    <div class="ui-card">
+
+      <div class="ui-card-title">Enter Code</div>
+      <div class="ui-card-sub">Ask your friend for the room code.</div>
+
+      <input id="joinCodeInput"
+             class="ui-input"
+             type="text"
+             maxlength="6"
+             placeholder="XXXXXX" />
+
+      <button id="joinGameBtn" class="btn btn-primary">Join</button>
+      <!-- BACK (inside content) -->
+      <button id="backToCreateBtnDup" class="btn btn-ghost full">← Back</button>
+
+      <!-- hidden helper for your JS -->
+      <button id="backToCreateBtn" style="display:none;"></button>
+    </div>
+  </main>
+
+  <nav class="home-tabbar">
+    <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
+    <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
+  </nav>
+</div>
+
 
   <!---------- GAME SCREEN ----------->
 
