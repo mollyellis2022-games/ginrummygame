@@ -17,8 +17,9 @@
 .home-screen {
     height: 100svh;
     min-height: 100svh;
+    width: 100%;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
     /* appbar / fill / bottom */
     gap: 12px;
     overflow: hidden;
@@ -28,19 +29,28 @@
         radial-gradient(700px 500px at 80% 30%, rgba(255, 215, 130, .14), transparent 60%),
         linear-gradient(180deg, #0a2a18, #06180f 60%, #04110a);
     color: #eaf6ee;
+    padding: 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    padding-top: calc(12px + env(safe-area-inset-top));
 }
 
 .screen.app-chrome {
     height: 100svh;
     min-height: 100svh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
     /* appbar / fill / bottom */
     gap: 12px;
     overflow: hidden;
 
-    background: var(--ui-bg);
+    background:
+        radial-gradient(900px 600px at 30% 10%, rgba(124, 255, 58, .18), transparent 55%),
+        radial-gradient(700px 500px at 80% 30%, rgba(255, 215, 130, .14), transparent 60%),
+        linear-gradient(180deg, #0a2a18, #06180f 60%, #04110a);
     color: #eaf6ee;
+    padding: 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    padding-top: calc(12px + env(safe-area-inset-top));
 }
 
 /* ---------- APP BAR ---------- */
@@ -164,7 +174,7 @@
     height: 34px;
 }
 
-/* Optional: if you want "active" glow like in-game */ 
+/* Optional: if you want "active" glow like in-game */
 
 .home-game-profile-icon.active {
     box-shadow:
@@ -178,6 +188,7 @@
 
 .home-actions {
     min-height: 0;
+    /* critical for grid */
     display: flex;
     gap: 12px;
     align-items: stretch;
@@ -190,11 +201,21 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+
+    /* keep your visuals */
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(0, 0, 0, .18) !important;
+    color: #eaf6ee;
+    box-shadow: var(--ui-shadow);
+    border-radius: 22px;
+    padding-block: clamp(18px, 3.2vh, 44px);
 }
 
 
 .action-icon {
-    font-size: 34px;
+    font-size: clamp(32px, 4.5vh, 54px);
     filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .35));
 }
 
@@ -202,6 +223,7 @@
     font-weight: 900;
     letter-spacing: .2px;
     opacity: .95;
+    font-size: clamp(14px, 2.1vh, 18px);
 }
 
 /* ---------- BOTTOM BAR ---------- */

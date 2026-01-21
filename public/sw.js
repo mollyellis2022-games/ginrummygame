@@ -1,4 +1,4 @@
-const CACHE_NAME = "gr-static-v4"; // 👈 bump this when you deploy changes
+const CACHE_NAME = "gr-static-v8"; // 👈 bump this when you deploy changes
 
 const PRECACHE_URLS = [
   "/",
@@ -38,6 +38,10 @@ self.addEventListener("activate", (event) => {
         keys.map((k) => (k === CACHE_NAME ? null : caches.delete(k))),
       );
       await self.clients.claim();
+
+      // Tell all open tabs to reload once the new SW is active
+      const clients = await self.clients.matchAll({ type: "window" });
+      for (const client of clients) client.postMessage({ type: "SW_UPDATED" });
     })(),
   );
 });

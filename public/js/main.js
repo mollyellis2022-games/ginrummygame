@@ -102,10 +102,27 @@ socket.addEventListener("close", () => {
   window.showScreen?.("screen-loading");
 });
 
+// Reload once when the SW activates a new version
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    if (event.data?.type === "SW_UPDATED") location.reload();
+  });
+}
+
+// ---- PWA / Service Worker ----
 // ---- PWA / Service Worker ----
 if (!isLocalDevHost && "serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(console.error);
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("/sw.js", {
+        updateViaCache: "none",
+      });
+
+      // Optional: force an update check on each load (handy while iterating)
+      reg.update();
+    } catch (e) {
+      console.error("SW register failed", e);
+    }
   });
 }
 
