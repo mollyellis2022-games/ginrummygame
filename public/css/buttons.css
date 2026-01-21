@@ -50,32 +50,7 @@
   margin-bottom: 8px;
 }
 
-.points-btn {
-  min-width: 72px;
-  padding: 14px 0;
-  border-radius: 14px;
-  border: none;
-  font-size: 18px;
-  font-weight: 900;
-  cursor: pointer;
-  color: white;
-  background: linear-gradient(180deg, #7c55ff, #5b39d9);
-  box-shadow: 0 6px 0 rgba(60, 40, 140, 0.8), 0 14px 22px rgba(0, 0, 0, 0.35);
-  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
-}
 
-.points-btn:hover { filter: brightness(1.1); }
-
-.points-btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 3px 0 rgba(60, 40, 140, 0.8), 0 10px 16px rgba(0, 0, 0, 0.3);
-}
-
-.points-btn.active {
-  background: linear-gradient(180deg, #7cff3a, #4cd137);
-  color: #1b3a0f;
-  box-shadow: 0 6px 0 #2f8f1f, 0 14px 22px rgba(0, 0, 0, 0.35);
-}
 
 /* Have a Code Button */
 .small-btn {

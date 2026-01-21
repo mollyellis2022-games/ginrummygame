@@ -16,9 +16,9 @@
   --seg-pad-y: 8px;
   --seg-font: 15px;
 
-  --pill-pad-y: 10px;
-  --pill-pad-x: 12px;
-  --pill-radius: 16px;
+  --pill-min-h: 38px;
+  --pill-radius: 18px;
+  --pill-pad-y: 8px;
   
   --points-minw: 46px;
   --points-pad-y: 6px;
@@ -197,9 +197,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--pill-pad-y) var(--pill-pad-x);
+  min-height: var(--pill-min-h);
+  padding: var(--pill-pad-y);
   border-radius: var(--pill-radius);
-
   border: 1px solid rgba(255, 255, 255, .10);
   background: rgba(255, 255, 255, .06);
   box-shadow: 0 18px 48px rgba(0, 0, 0, .35);
@@ -244,8 +244,8 @@
 
 .points-btn.active,
 .seg-btn.active {
-  box-shadow: 0 8px 18px rgba(0, 0, 0, .22);
-  transform: translateY(1px);
+  background: linear-gradient(180deg, #7cff3a, #4cd137);
+  color: #1b3a0f;
 }
 
 /* Join input matches Home */
@@ -318,9 +318,9 @@
     --seg-pad-y: 7px;
     --seg-font: 14px;
 
-    --pill-pad-y: 9px;
-    --pill-pad-x: 10px;
+    --pill-min-h: 34px;
     --pill-radius: 14px;
+    --pill-pad-y: 2px;
 
     --points-minw: 42px;
     --points-pad-y: 5px;
@@ -357,9 +357,9 @@
     --seg-pad-y: 8px;
     --seg-font: 15px;
 
-    --pill-pad-y: 8px;
-    --pill-pad-x: 10px;
+    --pill-min-h: 30px;
     --pill-radius: 14px;
+    --pill-pad-y: 2px;
 
     --points-minw: 48px;
     --points-pad-y: 7px;

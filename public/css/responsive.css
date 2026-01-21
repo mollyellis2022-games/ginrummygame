@@ -1,54 +1,6 @@
 /*  public/css/resonsive.css */
 
-@media (max-height: 720px) {
-  
-  #screen-create.screen {
-    padding: 8px;
-    overflow: hidden;
-  }
 
-
-  .lobby-title,
-  .title {
-    font-size: 18px;
-    margin-bottom: 6px;  
-  }
-
-  .seg-btn {
-    padding: 12px 0;
-    font-size: 16px;
-  }
-
-
-  .points-btn {
-    padding: 10px 0;
-    font-size: 16px;
-    min-width: 64px;
-    margin-bottom: -5px;
-  }
-
-
-  .primary-btn {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    padding: 10px 22px;
-    font-size: 16px;
-  }
-
-  .small-btn {
-    padding: 10px 12px;
-    font-size: 14px;
-    margin-top: 4px;
-  }
-
-  .primary-btn,
-.points-btn,
-.seg-btn,
-.small-btn {
-  line-height: 1.1;
-}
-
-}
 
 @media (orientation: landscape) and (max-height: 300px) {
 
@@ -205,32 +157,7 @@
 /* =========================
    Mobile tweaks
 ========================= */
-@media (max-width: 420px) {
- 
 
-  #screen-host {
-    width: 100%; /* Ensure full width */
-    padding: 20px;
-  }
-
-  /* Adjust room code container padding and width for small screens */
-  #screen-host .room-code-container {
-    width: 100%;
-    padding: 16px;
-    gap: 14px;
-  }
-
-  /* Make buttons a bit smaller */
-  .start-game-btn {
-    padding: 12px 28px;
-    font-size: 16px;
-  }
-
-  /* Adjust the waiting status text size */
-  .waiting-status {
-    font-size: 18px;
-  }
-}
 
 /* DRAG MUST WIN */
 #deck,

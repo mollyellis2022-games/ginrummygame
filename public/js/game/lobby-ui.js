@@ -16,6 +16,38 @@ function generateRoomCode(len = 6) {
   return code;
 }
 
+
+window.resetLobbyFlowUI = function resetLobbyFlowUI() {
+  unlockLobbyUI(); // you already have it, no need for typeof guard
+
+  // Clear transient UI
+  const roomText = document.getElementById("roomCodeText");
+  if (roomText) roomText.textContent = "";
+
+  const waiting = document.getElementById("waitingStatus");
+  if (waiting) waiting.textContent = "";
+
+  document.getElementById("roomCodeSection")?.classList.add("hidden");
+  document.getElementById("startGameBtn")?.classList.add("hidden");
+
+  const joinInput = document.getElementById("joinCodeInput");
+  if (joinInput) joinInput.value = "";
+
+  // Reset state
+  GameState.isHost = false;
+  GameState.roomCode = null;
+  GameState.playersJoined = 0;
+
+  // Reset selections (and repaint UI)
+  setPlayersNeeded(2);
+  GameState.pointsTarget = 10;
+  // If updatePointsButtons is in outer scope after you refactor above:
+  window.updatePointsButtons?.(); // OR call updatePointsButtons() directly if in scope
+};
+
+
+
+
 window.createRoom = function () {
   GameState.isHost = true;
   GameState.roomCode = generateRoomCode(6);
@@ -201,15 +233,41 @@ window.bindUIActions = function bindUIActions() {
   document.getElementById("screen-game")?.classList.add("hidden");
   document.getElementById("screen-create")?.classList.remove("hidden");
 
-  let selectedPoints = 10;
-  window.GameState.pointsTarget = selectedPoints;
+  // default points (only set if not already set)
+  GameState.pointsTarget = GameState.pointsTarget ?? 10;
 
-  function updatePointsDisplay() {
-    window.GameState.pointsTarget = selectedPoints;
+  function setPointsTarget(n) {
+    GameState.pointsTarget = n;
+    updatePointsButtons();
   }
 
+  function updatePointsButtons() {
+    const selected = GameState.pointsTarget;
+
+    ["points10Btn", "points50Btn", "points100Btn"].forEach((id) => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      btn.classList.toggle("active", Number(btn.textContent) === selected);
+    });
+  }
+
+  window.updatePointsButtons = updatePointsButtons;
+
+  // Initial paint
   updatePointsButtons();
 
+  // Click handlers
+  document
+    .getElementById("points10Btn")
+    ?.addEventListener("click", () => setPointsTarget(10));
+  document
+    .getElementById("points50Btn")
+    ?.addEventListener("click", () => setPointsTarget(50));
+  document
+    .getElementById("points100Btn")
+    ?.addEventListener("click", () => setPointsTarget(100));
+
+  
   // default lobby values
   setPlayersNeeded(window.GameState.playersNeeded || 2);
 
@@ -221,62 +279,35 @@ window.bindUIActions = function bindUIActions() {
     .getElementById("players4Btn")
     ?.addEventListener("click", () => setPlayersNeeded(4));
 
-  // Points selection buttons
-  document.getElementById("points10Btn").addEventListener("click", function () {
-    selectedPoints = 10;
-    updatePointsDisplay();
-    updatePointsButtons();
-  });
-  document.getElementById("points50Btn").addEventListener("click", function () {
-    selectedPoints = 50;
-    updatePointsDisplay();
-    updatePointsButtons();
-  });
-  document
-    .getElementById("points100Btn")
-    .addEventListener("click", function () {
-      selectedPoints = 100;
-      updatePointsDisplay();
-      updatePointsButtons();
-    });
-
-  function updatePointsButtons() {
-    ["points10Btn", "points50Btn", "points100Btn"].forEach((id) => {
-      const btn = document.getElementById(id);
-      if (!btn) return;
-      btn.classList.toggle(
-        "active",
-        Number(btn.textContent) === selectedPoints,
-      );
-    });
-  }
-
   // create/join/start
   document
     .getElementById("createGameBtn")
     ?.addEventListener("click", window.createRoom);
 
-  document.getElementById("backToCreateBtn")?.addEventListener("click", () => {
-    window.showScreen("screen-create");
-  });
-
   document
     .getElementById("createBackHomeBtn")
     ?.addEventListener("click", () => {
+      window.resetLobbyFlowUI?.();
       window.showScreen("screen-home");
     });
 
   document.getElementById("hostBackBtn")?.addEventListener("click", () => {
+    window.resetLobbyFlowUI?.();
     window.showScreen("screen-create");
   });
+
+  document.getElementById("backToCreateBtn")?.addEventListener("click", () => {
+    window.resetLobbyFlowUI?.();
+    window.showScreen("screen-create");
+  });
+
 
   document
     .getElementById("backToCreateBtnDup")
     ?.addEventListener("click", () => {
+      window.resetLobbyFlowUI?.();
       document.getElementById("backToCreateBtn")?.click();
     });
-
-
 
   document.getElementById("goJoinBtn")?.addEventListener("click", () => {
     window.showScreen("screen-join");
