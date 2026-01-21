@@ -30,7 +30,6 @@ div {
 
 /******** GLOBAL STYLES ********/
 .screen {
-  display: flex;
   color: white;
   width: 100%;
   height: 100%;

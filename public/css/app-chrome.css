@@ -34,7 +34,7 @@
     padding-top: calc(12px + env(safe-area-inset-top));
 }
 
-.screen.app-chrome {
+.app-chrome {
     height: 100svh;
     min-height: 100svh;
     display: grid;

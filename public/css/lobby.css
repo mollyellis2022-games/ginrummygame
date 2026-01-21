@@ -2,6 +2,48 @@
    HOST / CREATE / JOIN — Home-style (native, not overrides)
    Requires these screens use: class="screen app-chrome"
    ========================================================= */
+/* Size tokens (normal defaults) */
+#screen-host,
+#screen-create,
+#screen-join {
+  --card-pad: 14px;
+  --card-gap: 12px;
+  --card-radius: 22px;
+
+  --stack-gap: 12px;
+
+  --seg-minh: 38px;
+  --seg-pad-y: 8px;
+  --seg-font: 15px;
+
+  --pill-pad-y: 10px;
+  --pill-pad-x: 12px;
+  --pill-radius: 16px;
+  
+  --points-minw: 46px;
+  --points-pad-y: 6px;
+  --points-font: 13px;
+  
+  --pill-label-size: 11px;
+
+  --codebox-pad-y: 10px;
+  --codebox-pad-x: 12px;
+  --codebox-radius: 16px;
+
+  --copy-pad-y: 10px;
+  --copy-pad-x: 12px;
+  --copy-radius: 14px;
+
+  --input-h: 46px;
+  --input-font: 20px;
+  --input-track: 6px;
+
+  --title-size: 18px;
+  --subtext-size: 13px;
+
+  --roomcode-size: 18px;
+  --roomcode-track: 4px;
+}
 
 #screen-host,
 #screen-create,
@@ -23,7 +65,7 @@
 #screen-join .ui-stack {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--stack-gap);
   flex: 1;
   min-height: 0;
 }
@@ -37,8 +79,8 @@
   margin: 0 auto;
 
   /* Home card look */
-  border-radius: 22px;
-  padding: 14px;
+  border-radius: var(--card-radius);
+    padding: var(--card-pad);
   border: 1px solid rgba(255, 255, 255, .10);
   background: rgba(255, 255, 255, .06);
   box-shadow: 0 18px 48px rgba(0, 0, 0, .35);
@@ -46,7 +88,7 @@
   /* Layout */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--card-gap);
   justify-content: flex-start;
 
   /* No “floating modal” constraints */
@@ -59,7 +101,7 @@
 #screen-join .title,
 #screen-join .join-title {
   font-weight: 900;
-  font-size: 18px;
+  font-size: var(--title-size);
   margin: 0;
   text-align: left;
 }
@@ -68,7 +110,7 @@
 .player-count-text,
 .waiting-status {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--subtext-size);
   opacity: .78;
   text-align: left;
   font-weight: 700;
@@ -97,8 +139,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 16px;
+  padding: var(--codebox-pad-y) var(--codebox-pad-x);
+    border-radius: var(--codebox-radius);
 
   border: 1px solid rgba(255, 255, 255, .12);
   background: rgba(0, 0, 0, .16);
@@ -106,9 +148,9 @@
 }
 
 .room-code {
-  font-size: 18px;
+  font-size: var(--roomcode-size);
   font-weight: 900;
-  letter-spacing: 4px;
+  letter-spacing: var(--roomcode-track);
 }
 
 /* Copy button: bring in your Home button language */
@@ -117,14 +159,14 @@
   background: rgba(255, 255, 255, .10);
   color: #eaf6ee;
   font-weight: 900;
-  border-radius: 14px;
-  padding: 10px 12px;
+  border-radius: var(--copy-radius);
+  padding: var(--copy-pad-y) var(--copy-pad-x);
 }
 
 /* Segmented control matches Home glass */
 .segmented {
   width: 100%;
-  min-height: 44px;
+  min-height: var(--seg-minh);
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-radius: 18px;
@@ -138,18 +180,15 @@
 }
 
 .seg-btn {
-  padding: 12px 0;
+  padding: var(--seg-pad-y) 0;
   border: 0;
   background: transparent;
   color: #eaf6ee;
   font-weight: 900;
-  font-size: 18px;
+  font-size: var(--seg-font);
   cursor: pointer;
-}
-
-.seg-btn.active {
-  background: linear-gradient(180deg, #7cff3a, #4cd137);
-  color: #06210f;
+  line-height: 1;
+  transform: translateZ(0);
 }
 
 /* Points pill matches Home */
@@ -158,8 +197,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 12px;
-  border-radius: 18px;
+  padding: var(--pill-pad-y) var(--pill-pad-x);
+  border-radius: var(--pill-radius);
 
   border: 1px solid rgba(255, 255, 255, .10);
   background: rgba(255, 255, 255, .06);
@@ -172,9 +211,9 @@
 
 .pill-text {
   font-weight: 900;
-  font-size: 12px;
+  font-size: var(--pill-label-size);
   opacity: .85;
-  letter-spacing: .6px;
+  letter-spacing: .5px;
   white-space: nowrap;
 }
 
@@ -188,21 +227,25 @@
 }
 
 .points-btn {
-  min-width: 64px;
-  padding: 12px 0;
-  border-radius: 14px;
-  font-size: 16px;
+  min-width: var(--points-minw);
+  padding: var(--points-pad-y) 0;
+  border-radius: 12px;
+
+  font-size: var(--points-font);
+  font-weight: 900;
 
   border: 1px solid rgba(255, 255, 255, .12);
   background: rgba(0, 0, 0, .16);
   color: #eaf6ee;
-  font-weight: 900;
   box-shadow: 0 14px 30px rgba(0, 0, 0, .25);
+  line-height: 1;
+  transform: translateZ(0);
 }
 
-.points-btn.active {
-  background: linear-gradient(180deg, #7cff3a, #4cd137);
-  color: #06210f;
+.points-btn.active,
+.seg-btn.active {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .22);
+  transform: translateY(1px);
 }
 
 /* Join input matches Home */
@@ -217,10 +260,10 @@
   background: rgba(255, 255, 255, .06);
   color: #eaf6ee;
 
-  font-size: 20px;
+  font-size: var(--input-font);
   font-weight: 900;
   text-align: center;
-  letter-spacing: 6px;
+  letter-spacing: var(--input-track);
   text-transform: uppercase;
 
   outline: none;
@@ -256,4 +299,78 @@
 #screen-join .join-card,
 #screen-host .room-code-container {
   margin-top: 0;
+}
+
+
+/* Compact only changes tokens (no selector overrides) */
+@media (orientation: landscape), (max-height: 760px) {
+
+  #screen-host,
+  #screen-create,
+  #screen-join {
+    --card-pad: 10px;
+    --card-gap: 8px;
+    --card-radius: 18px;
+
+    --stack-gap: 8px;
+
+    --seg-minh: 34px;
+    --seg-pad-y: 7px;
+    --seg-font: 14px;
+
+    --pill-pad-y: 9px;
+    --pill-pad-x: 10px;
+    --pill-radius: 14px;
+
+    --points-minw: 42px;
+    --points-pad-y: 5px;
+    --points-font: 12px;
+
+    --codebox-pad-y: 8px;
+    --codebox-pad-x: 10px;
+    --codebox-radius: 14px;
+
+    --copy-pad-y: 9px;
+    --copy-pad-x: 10px;
+    --copy-radius: 12px;
+
+    --input-h: 42px;
+    --input-font: 17px;
+    --input-track: 4px;
+
+    --title-size: 16px;
+    --subtext-size: 12px;
+
+    --roomcode-size: 16px;
+    --roomcode-track: 3px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  #screen-host,
+  #screen-create,
+  #screen-join {
+    --card-pad: 9px;
+    --card-gap: 7px;
+
+    --seg-minh: 30px;
+    --seg-pad-y: 8px;
+    --seg-font: 15px;
+
+    --pill-pad-y: 8px;
+    --pill-pad-x: 10px;
+    --pill-radius: 14px;
+
+    --points-minw: 48px;
+    --points-pad-y: 7px;
+    --points-font: 13px;
+
+    --pill-label-size: 10.5px;
+
+    --input-h: 40px;
+    --input-font: 16px;
+
+    --title-size: 15px;
+    --subtext-size: 11.5px;
+  }
 }
