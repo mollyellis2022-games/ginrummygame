@@ -68,6 +68,7 @@
   gap: var(--stack-gap);
   flex: 1;
   min-height: 0;
+  width: 100%;
 }
 
 /* Make your existing “cards” behave like Home cards */
@@ -75,7 +76,7 @@
 .join-card,
 .lobby-stack {
   width: 100%;
-  max-width: 520px;
+  max-width: 900px;
   margin: 0 auto;
 
   /* Home card look */
@@ -96,6 +97,12 @@
   overflow: visible;
 }
 
+.ui-card-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
 /* Titles: match Home weight/scale */
 .lobby-title,
 #screen-join .title,

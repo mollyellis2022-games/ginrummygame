@@ -142,52 +142,55 @@
     oldEl.parentNode.replaceChild(newEl, oldEl);
   }
 
-  window.animateDealRound = async function animateDealRound({ roundId } = {}) {
-    if (!window.deckDiv || !window.handDiv) return;
+  // Drop-in replacement for: window.animateDealRound
+// Adds: try/finally, GameState._dealAnimating flag, and always clears _dealAnimRoundId
 
-    const revealDeckCount = () => {
-      deckDiv.classList.remove("count-hidden");
-      deckDiv.classList.add("count-reveal");
+window.animateDealRound = async function animateDealRound({ roundId } = {}) {
+  if (!window.deckDiv || !window.handDiv) return;
 
-      // ✅ deck enters from top-right into its angled resting pose
-      setTimeout(() => deckDiv.classList.remove("count-reveal"), 260);
-    };
+  const revealDeckCount = () => {
+    deckDiv.classList.remove("count-hidden");
+    deckDiv.classList.add("count-reveal");
+    setTimeout(() => deckDiv.classList.remove("count-reveal"), 260);
+  };
 
-    const cleanupDeckCount = () => {
-      deckDiv.classList.remove("count-hidden");
-      deckDiv.classList.remove("count-reveal");
-    };
+  const cleanupDeckCount = () => {
+    deckDiv.classList.remove("count-hidden");
+    deckDiv.classList.remove("count-reveal");
+  };
 
-    // prevent double-play
-    if (GameState._dealAnimRoundId === roundId) return;
-    GameState._dealAnimRoundId = roundId;
+  // prevent double-play (same round)
+  if (GameState._dealAnimRoundId === roundId) return;
+  GameState._dealAnimRoundId = roundId;
 
+  // mark: deal animation is active (use this to suppress other UI flashes)
+  GameState._dealAnimating = true;
+
+  try {
     window.maybeInitGameSeats?.();
 
+    // NOTE: do NOT early-return if opp target missing — we can still deal to you
     const oppTarget = document.querySelector(
       '[data-seat="top"] .game-player-profile',
     );
 
-    if (!oppTarget) {
-      GameState._dealAnimRoundId = null; // allow retry next state
-      cleanupDeckCount();
-      return;
-    }
-
     // ✅ 0) Immediately put UI into a clean “pre-animation” state BEFORE any pause.
-    // Hide deck count right away, and keep deck offscreen so there is no visible “deck + count” frame.
     const deckWrap = document.getElementById("deck-wrap");
     deckDiv.classList.add("count-hidden");
     deckDiv.classList.remove("count-reveal");
     deckWrap?.classList.add("pre-drop");
 
     // Best-effort: ensure any match-end overlay is not visible during the first painted frame.
-    // If you already have a dedicated hide function, prefer that.
     window.hideMatchEndOverlay?.();
-    document.querySelectorAll("#match-end, #matchEndOverlay, .match-end-overlay, .match-end")
-      .forEach((el) => { el.style.display = "none"; });
+    document
+      .querySelectorAll(
+        "#match-end, #matchEndOverlay, .match-end-overlay, .match-end",
+      )
+      .forEach((el) => {
+        el.style.display = "none";
+      });
 
-    // ✅ 1) Now pause AFTER the screen is already in its correct pre-state.
+    // ✅ 1) Pause AFTER the screen is already in its correct pre-state.
     await nextFrame();
     await sleep(PRE_ANIM_PAUSE_MS);
 
@@ -244,29 +247,45 @@
         await sleep(FLIP_MS);
         window.requestHandPoseRefresh?.(handDiv);
       } else {
-        // ✅ match opponent draw endpoint: fly toward the virtual/offscreen rect,
-        // and fade out near/past the opponent edge.
+        // Opponent deal: prefer virtual/offscreen rect; fall back to oppTarget if present.
         const deckRect = deckDiv.getBoundingClientRect();
+
         const oppRect = window.getOppVirtualRect?.({
           w: deckRect.width,
           h: deckRect.height,
         });
-        if (oppRect) {
+
+        // (Optional) debug log — keep while verifying, then delete
+        console.log("[deal] opponent anim target", {
+          hasVirtualRect: !!oppRect,
+          virtualRect: oppRect,
+          hasOppTarget: !!oppTarget,
+          oppTargetRect: oppTarget?.getBoundingClientRect?.(),
+        });
+
+        const dest = oppRect || oppTarget;
+
+        if (dest) {
           await animateBackGhost({
             fromEl: deckDiv,
-            toElOrRect: oppRect,
+            toElOrRect: dest,
             ms: OPP_GHOST_MS,
             fadeOut: true,
             scaleTo: 0.86,
           });
         } else {
-          // fallback if virtual rect is unavailable
+          // No destination available — short “lift” ghost so it still feels like a deal.
           await animateBackGhost({
             fromEl: deckDiv,
-            toElOrRect: oppTarget,
-            ms: OPP_GHOST_MS,
+            toElOrRect: {
+              left: deckRect.left,
+              top: deckRect.top - 30,
+              width: deckRect.width,
+              height: deckRect.height,
+            },
+            ms: Math.min(OPP_GHOST_MS, 220),
             fadeOut: true,
-            scaleTo: 0.86,
+            scaleTo: 0.92,
           });
         }
       }
@@ -287,5 +306,18 @@
     await window.animateDeckReturnToRest?.({ ms: RETURN_MS });
     await sleep(POST_RETURN_GAP);
     revealDeckCount();
-  };;
+  } catch (err) {
+    // If something goes wrong mid-deal, at least restore deck count visibility
+    cleanupDeckCount();
+    console.error("[deal] animateDealRound failed:", err);
+  } finally {
+    // ✅ always clear flags so the next round can animate
+    GameState._dealAnimating = false;
+    GameState._dealAnimRoundId = null;
+
+    // optional: clear deck pre-drop class if your drop-in anim uses it
+    document.getElementById("deck-wrap")?.classList.remove("pre-drop");
+  }
+};
+
 })();

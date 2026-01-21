@@ -12,6 +12,11 @@ function isTouchDevice() {
   );
 }
 
+function isCoarsePointer() {
+  return window.matchMedia?.("(pointer: coarse)")?.matches || false;
+}
+
+
 // --- double-tap helpers (mobile) ---
 const DOUBLE_TAP_MS = 320;
 const TAP_MOVE_PX = 10;

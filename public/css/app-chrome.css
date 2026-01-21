@@ -21,7 +21,7 @@
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     /* appbar / fill / bottom */
-    gap: 12px;
+    gap: 8px;
     overflow: hidden;
 
     background:
@@ -29,9 +29,7 @@
         radial-gradient(700px 500px at 80% 30%, rgba(255, 215, 130, .14), transparent 60%),
         linear-gradient(180deg, #0a2a18, #06180f 60%, #04110a);
     color: #eaf6ee;
-    padding: 12px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    padding-top: calc(12px + env(safe-area-inset-top));
+    padding: 5px;
 }
 
 .app-chrome {
@@ -40,7 +38,7 @@
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     /* appbar / fill / bottom */
-    gap: 12px;
+    gap: 8px;
     overflow: hidden;
 
     background:
@@ -48,9 +46,7 @@
         radial-gradient(700px 500px at 80% 30%, rgba(255, 215, 130, .14), transparent 60%),
         linear-gradient(180deg, #0a2a18, #06180f 60%, #04110a);
     color: #eaf6ee;
-    padding: 12px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    padding-top: calc(12px + env(safe-area-inset-top));
+    padding: 5px;
 }
 
 /* ---------- APP BAR ---------- */
@@ -228,13 +224,13 @@
 
 /* ---------- BOTTOM BAR ---------- */
 .home-tabbar {
-    height: 58px;
-    padding: 8px;
+    height: 52px;
+    padding: 6px 10px;
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, .10);
-    background: rgba(255, 255, 255, .06);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, .25);
-
+    border: 1px solid var(--ui-card-border);
+    background: var(--ui-card-bg);
+    box-shadow: var(--ui-soft-shadow);
+   
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -244,17 +240,16 @@
 
 .tab-btn {
     flex: 1;
-    border: 0;
+    border: 1px solid rgba(255, 255, 255, .12);
     background: rgba(0, 0, 0, .16);
-    border: 1px solid rgba(255, 255, 255, .10);
-    border-radius: 16px;
-    height: 100%;
+    color: inherit;
+    font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 16px;
+    height: 100%;
     gap: 10px;
-    color: inherit;
-    font-weight: 900;
 }
 
 .tab-ic {

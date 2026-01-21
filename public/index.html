@@ -84,15 +84,10 @@
 
   <!-- BOTTOM BAR -->
   <nav class="home-tabbar" aria-label="Bottom navigation">
-    <button class="tab-btn" id="homeLeaderboardBtn" type="button">
-      <span class="tab-ic" aria-hidden="true">🏆</span>
-      <span class="tab-txt">Leaderboard</span>
-    </button>
-
-    <button class="tab-btn" id="homeFriendsBtn" type="button">
-      <span class="tab-ic" aria-hidden="true">👥</span>
-      <span class="tab-txt">Friends</span>
-    </button>
+    
+    <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
+    <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
+    
   </nav>
 
   <!-- PROFILE MODAL (placeholder) -->
@@ -162,8 +157,10 @@
     <div class="ui-card">
       
 
-      <div class="ui-card-title">Create Room</div>
-      <div class="ui-card-sub">Choose players and target score.</div>
+      <div class="ui-card-title-container">
+        <div class="ui-card-title">Create Room</div>
+        <div class="ui-card-sub">Choose players and target score.</div>
+      </div>
 
       <div class="lobby-stack">
         <div class="segmented">
@@ -191,9 +188,11 @@
   </main>
 
   <!-- BOTTOM BAR (IDENTICAL TO HOME) -->
-  <nav class="home-tabbar">
+   <nav class="home-tabbar" aria-label="Bottom navigation">
+    
     <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
     <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
+    
   </nav>
 </div>
 
@@ -226,8 +225,10 @@
   <main class="ui-stack">
     <div class="ui-card">
 
+       <div class="ui-card-title-container">
       <div class="ui-card-title">Room Code</div>
       <div class="ui-card-sub" id="playerCountText">Players: 1/2</div>
+      </div>
 
       <div id="roomCodeSection" class="room-code-row">
         <div class="room-code-text">ROOM CODE</div>
@@ -239,10 +240,7 @@
 
       <p id="waitingStatus" class="waiting-status">Waiting for players…</p>
 
-      <button id="startGameBtn"
-              class="btn btn-primary"
-              style="display:none;"
-              disabled>
+      <button id="startGameBtn" class="btn btn-primary hidden" type="button">
         Start
       </button>
 
@@ -251,9 +249,11 @@
     </div>
   </main>
 
-  <nav class="home-tabbar">
+  <nav class="home-tabbar" aria-label="Bottom navigation">
+    
     <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
     <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
+    
   </nav>
 </div>
 
@@ -284,8 +284,10 @@
   <main class="ui-stack">
     <div class="ui-card">
 
+       <div class="ui-card-title-container">
       <div class="ui-card-title">Enter Code</div>
       <div class="ui-card-sub">Ask your friend for the room code.</div>
+      </div>
 
       <input id="joinCodeInput"
              class="ui-input"
@@ -302,9 +304,11 @@
     </div>
   </main>
 
-  <nav class="home-tabbar">
+   <nav class="home-tabbar" aria-label="Bottom navigation">
+    
     <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
     <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
+    
   </nav>
 </div>
 

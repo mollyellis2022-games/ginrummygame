@@ -125,18 +125,7 @@ function renderDiscardTop(discardTop) {
     !GameState._discardAnimLock
   ) {
     cardDiv.classList.add("clickable");
-
-    if (!isTouchDevice()) {
-      bindTap(cardDiv, () => {
-        if (GameState._dealAnimating || GameState._roundRevealActive || GameState._discardAnimLock) return;
-        if (!GameState.isYourTurn || GameState.currentPhase !== "draw") return;
-
-        captureDrawStart("discard");
-        window.socket.send(JSON.stringify({ type: "draw-discard" }));
-      }, { touch: false });
-    }
   }
-
   // Drag-to-draw from discard to hand (works mouse + touch)
   enableDrawDragFromPile(cardDiv, "discard", handDiv);
 
@@ -153,7 +142,7 @@ function createCardDiv(card) {
   div.dataset.rank = card.rank;
   div.dataset.suit = card.suit;
 
-  const isCoarse = isTouchDevice();
+  const isCoarse = isCoarsePointer();
 
   // ✅ phones use pointer drag only, desktop uses HTML5 drag only
   div.draggable = !isCoarse;

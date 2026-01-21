@@ -89,27 +89,19 @@ window.joinRoom = function () {
 };
 
 
-function bindTap(el, handler, { touch = false } = {}) {
+function bindTap(el, handler) {
   if (!el) return;
 
-  if (touch) {
-    el.addEventListener(
-      "pointerup",
-      (e) => {
-        if (e.pointerType !== "touch") return;
-        if (el.dataset.dragMoved === "1") return;
-        e.preventDefault();
-        handler(e);
-      },
-      { passive: false },
-    );
-  }
-
-  el.addEventListener("click", (e) => {
-    // click events generally only matter for mouse/pen; touch click is unreliable here
-    if (e.pointerType === "touch") return;
-    handler(e);
-  });
+  el.addEventListener(
+    "pointerup",
+    (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (el.dataset.dragMoved === "1") return;
+      e.preventDefault();
+      handler(e);
+    },
+    { passive: false },
+  );
 }
 
 window.bindTap = bindTap;
@@ -120,26 +112,10 @@ window.bindUIActions = function bindUIActions() {
   // ====== MAIN GAME UI ======
 
   // Deck: click on desktop only; touch tap handled inside enableDrawDragFromPile
-  bindTap(
-    deckDiv,
-    () => {
-      if (
-        GameState._dealAnimating ||
-        GameState._roundRevealActive ||
-        GameState._discardAnimLock
-      )
-        return;
-      if (!GameState.isYourTurn || GameState.currentPhase !== "draw") return;
-
-      captureDrawStart("deck");
-      window.socket.send(JSON.stringify({ type: "draw-deck" }));
-    },
-    { touch: false },
-  );
-
-  enableDrawDragFromPile(deckDiv, "deck", handDiv);
-
+   enableDrawDragFromPile(deckDiv, "deck", handDiv);
   makeDiscardDropZone(discardDiv);
+
+  
 
   const ginBtn = document.getElementById("ginBtn");
 

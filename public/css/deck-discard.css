@@ -136,3 +136,10 @@
   cursor: pointer;
   animation: deckPulse 1.4s ease-in-out infinite;
 }
+
+/* Let taps register */
+#deck,
+#discard,
+#discard .card {
+  touch-action: manipulation !important;
+}

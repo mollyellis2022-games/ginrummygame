@@ -199,6 +199,8 @@ function enableDrawDragFromPile(
     handEl.classList.remove("draw-drop-ready");
     if (ghost) ghost.remove();
     ghost = null;
+    delete sourceEl.dataset.dragMoved;
+
 
     removePlaceholder();
 
@@ -225,7 +227,6 @@ function enableDrawDragFromPile(
 
       dragging = true;
       sourceEl.dataset.dragMoved = "1";
-      setTimeout(() => delete sourceEl.dataset.dragMoved, 300);
 
       ghost = makeGhostFromSource(sourceEl);
       moveGhostToFinger(e.clientX, e.clientY);
@@ -308,7 +309,9 @@ function enableDrawDragFromPile(
     "pointerdown",
     (e) => {
       // allow if pointerType missing (some browsers)
-      if (e.pointerType && e.pointerType !== "touch") return;
+      // allow touch + mouse + pen (block only right click)
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+
       if (!canDrawNow()) return;
 
       if (GameState._drawDragActive) return;

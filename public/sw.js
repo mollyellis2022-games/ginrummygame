@@ -1,4 +1,4 @@
-const CACHE_NAME = "gr-static-v8"; // 👈 bump this when you deploy changes
+const CACHE_NAME = "gr-static-v16"; // 👈 bump this when you deploy changes
 
 const PRECACHE_URLS = [
   "/",
