@@ -5,7 +5,7 @@
   /* “real life” angle while sitting on table */
 }
 
-.deck-wrap {
+#deck-wrap {
   display: inline-block;
   will-change: transform, opacity;
   transform-origin: 50% 60%;
@@ -14,7 +14,7 @@
   opacity: 1;
   position: relative;
 }
-.deck-wrap.pre-drop {
+#deck-wrap.pre-drop {
   
   /* Ensure no “deck visible” frame before drop begins */
   opacity: 0;
@@ -67,13 +67,13 @@
 
 }
 
-.deck-wrap.deck-dropping::after {
+#deck-wrap.deck-dropping::after {
   animation: deckShadowDrop 640ms cubic-bezier(.14, .85, .22, 1) both;
 
 }
 
 /* Staged pose used only during shuffle  deal */
-.deck-wrap.deck-staged {
+#deck-wrap.deck-staged {
   transform: translate3d(0, 0, 0) rotate(var(--deck-rest-rot));
 }
 
@@ -115,7 +115,7 @@
 
 }
 
-.deck-wrap.deck-dropping {
+#deck-wrap.deck-dropping {
 
   /* “gravity-ish”: slow start, faster end */
   animation: deckDropInFromTopRight 640ms cubic-bezier(.14, .85, .22, 1) both;
@@ -140,7 +140,7 @@
     }
 }
 
-.deck-wrap.deck-returning {
+#deck-wrap.deck-returning {
   animation: deckReturnToRest 240ms cubic-bezier(.22, .61, .36, 1) both;
 }
 

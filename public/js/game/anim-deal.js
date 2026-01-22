@@ -196,6 +196,7 @@ window.animateDealRound = async function animateDealRound({ roundId } = {}) {
 
     // ✅ drop deck in from top-right (staged/angled for shuffle+deal)
     await window.animateDeckDropIn?.({ ms: DROP_MS });
+    deckWrap?.classList.remove("pre-drop");
     await sleep(POST_DROP_GAP);
 
     // ✅ shuffle first

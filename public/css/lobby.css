@@ -2,7 +2,11 @@
    HOST / CREATE / JOIN — Home-style (native, not overrides)
    Requires these screens use: class="screen app-chrome"
    ========================================================= */
-/* Size tokens (normal defaults) */
+
+
+/* =========================================================
+   1) TOKENS (per-screen size tuning)
+   ========================================================= */
 #screen-host,
 #screen-create,
 #screen-join {
@@ -19,11 +23,11 @@
   --pill-min-h: 38px;
   --pill-radius: 18px;
   --pill-pad-y: 8px;
-  
+
   --points-minw: 46px;
   --points-pad-y: 6px;
   --points-font: 13px;
-  
+
   --pill-label-size: 11px;
 
   --codebox-pad-y: 10px;
@@ -43,67 +47,99 @@
 
   --roomcode-size: 18px;
   --roomcode-track: 4px;
-}
 
-#screen-host,
-#screen-create,
-#screen-join {
   width: 100%;
   height: 100%;
 }
 
-/* If you kept the old pattern class on these screens, disable it */
+/* Disable any old “pattern” overlays if present */
 #screen-host.screen--pattern::before,
 #screen-create.screen--pattern::before,
 #screen-join.screen--pattern::before {
   display: none;
 }
 
-/* Shared layout inside these screens */
+
+/* =========================================================
+   2) SCREEN LAYOUT (middle slot + card positioning)
+   ========================================================= */
 #screen-host .ui-stack,
 #screen-create .ui-stack,
 #screen-join .ui-stack {
+  position: relative;
+  /* anchors Back button */
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* card centered in middle slot */
   gap: var(--stack-gap);
   flex: 1;
   min-height: 0;
   width: 100%;
 }
 
-/* Make your existing “cards” behave like Home cards */
-.room-code-container,
-.join-card,
-.lobby-stack {
+
+/* =========================================================
+   3) CARD (shared across host/create/join)
+   ========================================================= */
+#screen-create .ui-card,
+#screen-join .ui-card,
+#screen-host .ui-card {
+  flex: 1;
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 520px;
 
-  /* Home card look */
+  /* “Fills nicely” without taking over tall screens */
+  max-height: 520px;
+  min-height: min(380px, 100%);
+
+  padding: var(--card-pad);
   border-radius: var(--card-radius);
-    padding: var(--card-pad);
-  border: 1px solid rgba(255, 255, 255, .10);
-  background: rgba(255, 255, 255, .06);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, .35);
 
-  /* Layout */
   display: flex;
   flex-direction: column;
-  gap: var(--card-gap);
-  justify-content: flex-start;
 
-  /* No “floating modal” constraints */
-  max-height: none;
-  overflow: visible;
-}
-
-.ui-card-title-container {
-  display: flex;
-  justify-content: center;
+  /* Note: centering everything is your current behavior.
+     If you ever want “content top, CTA bottom”, remove these 2 lines:
+     align-items / justify-content and rely on per-screen margin-top:auto. */
   align-items: center;
-  width: 100%;
+  justify-content: center;
+
+  gap: var(--card-gap);
+
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
-/* Titles: match Home weight/scale */
+
+/* Join screen: slightly airier vertical rhythm */
+#screen-join .ui-card {
+  gap: 18px;
+}
+
+
+/* =========================================================
+   4) TYPOGRAPHY (titles + subtext)
+   ========================================================= */
+#screen-create .ui-card-title-container,
+#screen-join .ui-card-title-container,
+#screen-host .ui-card-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+  width: 100%;
+  margin: 0;
+}
+
+#screen-create .ui-card-sub,
+#screen-join .ui-card-sub,
+#screen-host .ui-card-sub {
+  margin-top: 0;
+}
+
+/* If any legacy title classes exist, keep them aligned */
 .lobby-title,
 #screen-join .title,
 #screen-join .join-title {
@@ -113,7 +149,6 @@
   text-align: left;
 }
 
-/* Subtext */
 .player-count-text,
 .waiting-status {
   margin: 0;
@@ -123,54 +158,32 @@
   font-weight: 700;
 }
 
-/* Room code row */
-.room-code-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+
+/* =========================================================
+   5) CREATE: inner stack (NOT a card)
+   ========================================================= */
+#screen-create .lobby-stack {
+  flex: 1;
   width: 100%;
+  max-width: none;
   margin: 0;
-}
+  padding: 0;
 
-.room-code-text {
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: .6px;
-  opacity: .85;
-  white-space: nowrap;
-}
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 
-.code-box {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: var(--codebox-pad-y) var(--codebox-pad-x);
-    border-radius: var(--codebox-radius);
-
-  border: 1px solid rgba(255, 255, 255, .12);
-  background: rgba(0, 0, 0, .16);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, .25);
+  flex-direction: column;
+  gap: var(--card-gap);
 }
 
-.room-code {
-  font-size: var(--roomcode-size);
-  font-weight: 900;
-  letter-spacing: var(--roomcode-track);
-}
 
-/* Copy button: bring in your Home button language */
-.copy-btn {
-  border: 1px solid rgba(255, 255, 255, .12);
-  background: rgba(255, 255, 255, .10);
-  color: #eaf6ee;
-  font-weight: 900;
-  border-radius: var(--copy-radius);
-  padding: var(--copy-pad-y) var(--copy-pad-x);
-}
+/* =========================================================
+   6) COMPONENTS
+   ========================================================= */
 
-/* Segmented control matches Home glass */
+/* Segmented control */
 .segmented {
   width: 100%;
   min-height: var(--seg-minh);
@@ -198,15 +211,17 @@
   transform: translateZ(0);
 }
 
-/* Points pill matches Home */
+/* Points pill */
 .pill {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   min-height: var(--pill-min-h);
   padding: var(--pill-pad-y);
   border-radius: var(--pill-radius);
+
   border: 1px solid rgba(255, 255, 255, .10);
   background: rgba(255, 255, 255, .06);
   box-shadow: 0 18px 48px rgba(0, 0, 0, .35);
@@ -249,17 +264,18 @@
   transform: translateZ(0);
 }
 
+/* Active states (seg + points) */
 .points-btn.active,
 .seg-btn.active {
   background: linear-gradient(180deg, #7cff3a, #4cd137);
   color: #1b3a0f;
 }
 
-/* Join input matches Home */
+/* Join code input */
 #screen-join #joinCodeInput,
 .code-input {
   width: 100%;
-  height: 46px;
+  height: var(--input-h);
   padding: 0 16px;
   border-radius: 16px;
 
@@ -282,7 +298,6 @@
   color: rgba(255, 255, 255, .55);
 }
 
-/* Join label becomes subtle */
 #screen-join .join-label {
   text-align: left;
   font-size: 12px;
@@ -291,26 +306,220 @@
   opacity: .85;
 }
 
-/* Keep your existing “primary-btn / small-btn” but harmonize if needed */
+
+/* =========================================================
+   7) HOST: room code row + code box sizing
+   ========================================================= */
+#screen-host .room-code-row,
+#screen-host .waiting-status {
+  margin-top: 0;
+}
+
+.room-code-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 100%;
+  margin: 0;
+}
+
+/* Host-specific layout (prefer wide row) */
+#screen-host .room-code-row {
+  flex-wrap: nowrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.room-code-text {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .6px;
+  opacity: .85;
+  white-space: nowrap;
+}
+
+/* Host: tone down label */
+#screen-host .room-code-text {
+  font-size: 13px;
+  opacity: .75;
+  letter-spacing: .5px;
+  font-weight: 800;
+}
+
+.code-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: var(--codebox-pad-y) var(--codebox-pad-x);
+  border-radius: var(--codebox-radius);
+
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(0, 0, 0, .16);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .25);
+}
+
+/* Host: let the code box expand */
+#screen-host .code-box {
+  flex: 1;
+  min-width: 260px;
+  justify-content: space-between;
+}
+
+.room-code {
+  font-size: var(--roomcode-size);
+  font-weight: 900;
+  letter-spacing: var(--roomcode-track);
+}
+
+/* Host: center the code text */
+#screen-host .room-code {
+  flex: 1;
+  text-align: center;
+}
+
+/* Copy button (note: your markup uses #copyCodeBtn + .btn btn-secondary)
+   This class stays in case you later switch to .copy-btn */
+.copy-btn {
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .10);
+  color: #eaf6ee;
+  font-weight: 900;
+  border-radius: var(--copy-radius);
+  padding: var(--copy-pad-y) var(--copy-pad-x);
+}
+
+#screen-host .code-box .btn,
+#screen-host #copyCodeBtn {
+  width: auto;
+  height: 40px;
+}
+
+
+/* =========================================================
+   8) BUTTONS (sizes + spacing + CTA placement)
+   ========================================================= */
+
+/* Legacy hooks (keep if used elsewhere) */
 .primary-btn,
 .create-game-btn,
 .start-game-btn {
+  width: 100%;
+  height: 46px;
   border-radius: 16px;
   font-weight: 900;
   letter-spacing: .2px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, .25);
 }
 
-/* Make the whole screen feel like Home spacing */
-#screen-create .lobby-stack,
-#screen-join .join-card,
-#screen-host .room-code-container {
-  margin-top: 0;
+/* Main buttons on these screens */
+#joinGameBtn,
+#startGameBtn,
+#createGameBtn,
+#goJoinBtn {
+  width: 100%;
+  height: 50px;
+  border-radius: 16px;
+}
+
+/* Tiny breathing room for vertical button stacks */
+#screen-join .ui-card>button,
+#screen-host .ui-card>button,
+#screen-create .lobby-stack>button {
+  margin-top: 2px;
+}
+
+/* CTA placement rules */
+#screen-join #joinGameBtn {
+  margin-top: auto;
+}
+
+#screen-host #startGameBtn {
+  margin-top: auto;
+}
+
+#screen-create #createGameBtn {
+  margin-top: auto;
+}
+
+/* Create: secondary action becomes “link-like” */
+#screen-create #goJoinBtn {
+  height: auto;
+  padding: 10px 8px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 12px;
+
+  font-weight: 900;
+  opacity: .9;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+#screen-create #goJoinBtn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, .04);
+}
+
+/* Green CTAs (Create + Start) */
+#screen-create #createGameBtn,
+#screen-host #startGameBtn {
+  background: linear-gradient(180deg, #7cff3a, #4cd137);
+  color: #1b3a0f;
+  border: 0;
+}
+
+#screen-create #createGameBtn:hover,
+#screen-host #startGameBtn:hover {
+  filter: brightness(1.03);
 }
 
 
-/* Compact only changes tokens (no selector overrides) */
-@media (orientation: landscape), (max-height: 760px) {
+/* =========================================================
+   9) BACK BUTTON (anchored to the middle slot, not the card)
+   ========================================================= */
+#createBackHomeBtn,
+#hostBackBtn,
+#backToCreateBtnDup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(10px, 10px);
+  z-index: 5;
+
+  width: auto !important;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 14px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(0, 0, 0, .16);
+  color: inherit;
+
+  font-weight: 900;
+  font-size: 13px;
+}
+
+#createBackHomeBtn:hover,
+#hostBackBtn:hover,
+#backToCreateBtnDup:hover {
+  background: rgba(0, 0, 0, .22);
+}
+
+
+/* =========================================================
+   10) RESPONSIVE (token-only compact tuning)
+   ========================================================= */
+@media (orientation: landscape),
+(max-height: 760px) {
 
   #screen-host,
   #screen-create,
@@ -351,9 +560,26 @@
     --roomcode-size: 16px;
     --roomcode-track: 3px;
   }
+
+  #createBackHomeBtn,
+  #hostBackBtn,
+  #backToCreateBtnDup {
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 12px;
+    font-size: 12.5px;
+  }
+
+  #joinGameBtn,
+  #startGameBtn,
+  #createGameBtn,
+  #goJoinBtn {
+    height: 44px;
+  }
 }
 
 @media (orientation: landscape) and (max-height: 520px) {
+
   #screen-host,
   #screen-create,
   #screen-join {
