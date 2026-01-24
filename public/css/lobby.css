@@ -16,11 +16,11 @@
 
   --stack-gap: 12px;
 
-  --seg-minh: 38px;
+  --seg-minh: 45px;
   --seg-pad-y: 8px;
   --seg-font: 15px;
 
-  --pill-min-h: 38px;
+  --pill-min-h: 45px;
   --pill-radius: 18px;
   --pill-pad-y: 8px;
 
@@ -128,7 +128,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 6px;
   width: 100%;
   margin: 0;
 }
