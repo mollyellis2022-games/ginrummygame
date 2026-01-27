@@ -3,7 +3,7 @@
 @import url("./tokens.css");
 @import url("./base.css");
 @import url("./buttons.css");
-@import url("./lobby.css");
+@import url("./lobby.css"); 
 @import url("./toasts.css");
 @import url("./game-layout.css");
 @import url("./animations.css");
@@ -15,3 +15,5 @@
 @import url("./overlays.css");
 @import url("./match-overlay.css");
 @import url("./responsive.css");
+@import url("./app-chrome.css"); 
+@import url("./home-screen.css");

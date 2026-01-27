@@ -1,0 +1,405 @@
+/* =========================
+   HOME SCREEN (INSPO MATCH)
+   ========================= */
+
+:root {
+    --felt-1: #0b1510;
+    --felt-2: #0f2418;
+    --felt-3: #163520;
+
+    --glass: rgba(10, 14, 12, .58);
+    --glass-2: rgba(0, 0, 0, .35);
+
+    --line: rgba(255, 255, 255, .10);
+    --line-strong: rgba(255, 255, 255, .14);
+
+    --gold-1: #f6d58c;
+    --gold-2: #d7a84b;
+    --gold-3: #8a5a1f;
+
+    --cta-1: #69e45a;
+    --cta-2: #2fb531;
+    --cta-3: #17751a;
+
+    --shadow-lg: 0 18px 45px rgba(0, 0, 0, .62);
+    --shadow-md: 0 10px 26px rgba(0, 0, 0, .55);
+    --shadow-sm: 0 6px 16px rgba(0, 0, 0, .45);
+
+    --radius-xl: 28px;
+    --radius-lg: 22px;
+    --radius-md: 16px;
+}
+
+.app-home-screen {
+    position: relative;
+    min-height: 100dvh;
+    overflow: hidden;
+
+    background-image: url("../assets/backgrounds/screen-background.png");
+    background-position: bottom;
+    background-size: cover;
+}
+
+
+
+
+/* -------------------------
+   TOP BAR
+   ------------------------- */
+.home-bar {
+    height: 72px;
+    padding: 0 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: rgba(0, 0, 0, .25);
+
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .45);
+}
+
+.home-bar .bar-left,
+.home-bar .bar-center,
+.home-bar .bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.home-pill {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 3px 15px 3px 3px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .38);
+    border: 1px solid rgba(255, 255, 255, .10);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.home-avatar-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, .45);
+    border: 1px solid rgba(255, 255, 255, .12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), var(--shadow-sm);
+}
+
+.home-icon-btn {
+    width: 52px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: rgba(0, 0, 0, .45);
+    border: 1px solid rgba(255, 255, 255, .12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+    color: #f2f2f2;
+    font-size: 16px;
+}
+
+.home-pill-label {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+.home-title .logo {
+    width: 120px;
+    height: 55px;
+    display: block;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .55);
+}
+
+/* -------------------------
+   CONTENT WRAP
+   ------------------------- */
+.home-wrap {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+}
+
+/* -------------------------
+   HERO (Gold frame + CTA)
+   ------------------------- */
+.home-hero {
+    position: relative;
+    width: 40%;
+    margin: 0 auto;
+    height: 120px;
+}
+
+.hero-frame {
+    height: 100%;
+    position: relative;
+    border-radius: 26px;
+    background: rgba(0, 0, 0, .25);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .6);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 0;
+}
+
+/* Gold bevel border */
+.hero-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 26px;
+    padding: 3px;
+    background: linear-gradient(180deg,
+                #ffe7a3,
+                #d7a84b 45%,
+                #7a4a1d);
+
+    opacity: .95;
+}
+
+/* Outer glow */
+.hero-frame::after {
+    content: "";
+    position: absolute;
+    inset: -14px;
+    border-radius: 34px;
+    background: radial-gradient(60% 40% at 50% 50%,
+    rgba(255, 200, 90, .25), transparent 70%);
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+/* subtle sparkles */
+.hero-sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .55;
+    background:
+        radial-gradient(circle at 10% 65%, rgba(255, 210, 110, .55) 0 2px, transparent 3px),
+        radial-gradient(circle at 25% 35%, rgba(255, 210, 110, .35) 0 1px, transparent 3px),
+        radial-gradient(circle at 80% 55%, rgba(255, 210, 110, .55) 0 2px, transparent 3px),
+        radial-gradient(circle at 92% 42%, rgba(255, 210, 110, .35) 0 1px, transparent 3px);
+    filter: blur(.2px);
+}
+
+/* Avatars row */
+.hero-avatars {
+    position: absolute;
+    left: 50%;
+    top: 0px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 18px;
+    align-items: flex-end;
+    margin-top: 10px;
+}
+
+.hero-avatars img {
+    width: 60px;
+    height: 70px;
+    object-fit: cover;
+    filter:
+            brightness(1.05) drop-shadow(0 8px 18px rgba(0, 0, 0, .6)) drop-shadow(0 0 10px rgba(255, 210, 110, .35));
+}
+
+/* CTA */
+.play-online {
+    margin-bottom: 12px;
+    height: 40px;
+    width: 250px;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, .35);
+
+    background:
+            linear-gradient(180deg, rgba(255, 255, 255, .2), transparent 35%),
+            linear-gradient(180deg, #6eea61, #2fb531 50%, #16721a);
+
+    box-shadow:
+            inset 0 2px 0 rgba(255, 255, 255, .3),
+            inset 0 -3px 0 rgba(0, 0, 0, .35),
+            0 18px 35px rgba(0, 0, 0, .55);
+
+    color: #ffe7a3;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 3px 0 rgba(0, 0, 0, .6);
+    text-align: center;
+    position: relative;
+}
+
+.play-online::before {
+    content: "";
+    position: absolute;
+    border-radius: 18px;
+    background: radial-gradient(70% 60% at 50% 50%, rgba(255, 210, 110, .3), transparent 80%);
+    filter: blur(2px);
+    opacity: .85;
+    pointer-events: none;
+}
+
+.play-online:active {
+    transform: translateY(1px);
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, .25),
+        inset 0 -2px 0 rgba(0, 0, 0, .35),
+        0 12px 26px rgba(0, 0, 0, .55);
+}
+
+/* -------------------------
+   TILES ROW
+   ------------------------- */
+.home-tiles {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 15px;
+    height: 250px;
+}
+
+.tile {
+    position: relative;
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    background:
+            radial-gradient(800px 240px at 50% 10%, rgba(255, 255, 255, .1), transparent 65%),
+            linear-gradient(180deg, rgba(0, 0, 0, .35), rgba(0, 0, 0, .9));
+    border: 1px solid rgba(255, 255, 255, .1);
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, .08),
+            inset 0 -18px 40px rgba(0, 0, 0, .35),
+            0 14px 30px rgba(0, 0, 0, .55);
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    height: 160px;
+}
+
+/* inner outline like screenshot */
+.tile::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    pointer-events: none;
+}
+
+.tile .tile-icon {
+    width: 50px;
+    height: 50px;
+    display: block;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, .55));
+}
+
+.rooms, .tiles-title {
+    margin-top: -10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: #f2f2f2;
+    text-shadow: 0 3px 0 rgba(0, 0, 0, .65);
+}
+
+.tile .tile-sub {
+    display: flex;
+    justify-content: center;
+    margin-top: -5px;
+}
+
+/* Rooms tile input + join */
+.room-row {
+    display: flex;
+    gap: 0;
+    margin-top: 10px;
+}
+
+.btn-join {
+    text-align: center;
+    height: 25px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, .35);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .16), transparent 35%),
+        linear-gradient(180deg, var(--cta-1), var(--cta-2) 50%, var(--cta-3));
+    color: #ffe9a8;
+    font-weight: 800;
+    font-size: 12px;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, .6);
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, .25),
+        inset 0 -2px 0 rgba(0, 0, 0, .35),
+        0 10px 18px rgba(0, 0, 0, .45);
+    width: 100%;
+    min-width: 150px;
+}
+
+.btn-join:active {
+    transform: translateY(1px);
+}
+
+/* Leaderboard tile "Friends" pill */
+.friends-pill {
+    padding: 5px 20px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(0, 0, 0, .28);
+    border: 1px solid rgba(255, 255, 255, .12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+    color: #eee;
+    font-weight: 900;
+    font-size: 10px;
+}
+
+.friends-pill .friends-icon {
+    width: 38px;
+    height: 28px;
+    display: block;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .45));
+}
+
+/* -------------------------
+   WOOD STRIP BOTTOM
+   ------------------------- */
+.home-wood {
+    margin-top: 18px;
+    height: 92px;
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, .06);
+    background:
+            linear-gradient(180deg, rgba(0, 0, 0, .55), rgba(0, 0, 0, .8)),
+            linear-gradient(90deg,
+                #6e3f1e,
+                #8b5228 30%,
+                #5a3419 60%,
+                #9a5a2e);
+    box-shadow:
+            0 -20px 45px rgba(0, 0, 0, .65),
+            inset 0 1px 0 rgba(255, 255, 255, .08);
+    position: relative;
+    z-index: 3;
+}
+

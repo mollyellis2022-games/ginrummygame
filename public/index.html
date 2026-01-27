@@ -31,65 +31,90 @@
 
 
   <!----------- HOME SCREEN ------------>
+  <section id="screen-home" class="app-home-screen screen">
 
-    <section id="screen-home" class="home-screen screen">
-
-  <!-- TOP BAR -->
-  <header class="home-appbar">
-    <!-- Left -->
-    <div class="appbar-left">
-      <button class="home-profile-btn" id="homeProfileBtn" type="button" aria-label="Profile">
-        <span class="home-game-profile-icon">
-          <img id="homeAvatar" alt="" />
-          <span class="home-avatar-fallback" id="homeAvatarFallback">G</span>
-        </span>
-      </button>
-
-
-      <a class="signin-inline"
+  <!-- TOP BAR (uses your existing ids) -->
+  <header class="home-bar">
+    <div class="bar-left">
+      <div class="home-pill">
+        <div class="home-avatar-btn">G</div>
+        <a class="home-pill-label"
          href="https://api.ellisandcodesigns.co.uk/auth/google/start"
          id="homeLoginBtn">Sign in</a>
+      </div>
     </div>
 
-    <!-- Center -->
-    <div class="appbar-center" aria-label="App">
-      <img class="appbar-logo" src="/assets/icons/icon-192.png" alt="" />
-      <span class="appbar-title">Gin Rummy Friends</span>
+    <div class="bar-center home-title" aria-label="App">
+      <img class="logo" src="/assets/branding/ginrummy-logo.png" alt="Gin Rummy Friends">
     </div>
 
-    <!-- Right -->
-    <div class="appbar-right">
-      <button class="icon-ghost" id="homeRulesBtn" type="button" aria-label="Rules">?</button>
-      <button class="icon-ghost" id="homeSettingsBtn" type="button" aria-label="Settings">⚙</button>
+    <div class="bar-right">
+      <button class="home-icon-btn" id="homeRulesBtn" type="button" aria-label="Rules">?</button>
+      <button class="home-icon-btn" id="homeSettingsBtn" type="button" aria-label="Settings">⚙</button>
     </div>
   </header>
 
-  <!-- MAIN ACTIONS -->
-  <main class="home-actions">
-    <button class="action-tile" id="homePlayBtn" type="button">
-      <div class="action-icon" aria-hidden="true">🃏</div>
-      <div class="action-label">Play</div>
-    </button>
+  <div class="home-wrap">
 
-    <button class="action-tile" id="homeRoomsBtn" type="button">
-      <div class="action-icon" aria-hidden="true">🔒</div>
-      <div class="action-label">Rooms</div>
-    </button>
+    <!-- HERO -->
+    <div class="home-hero">
+      <div class="hero-frame">
+        <div class="hero-sparkles" aria-hidden="true"></div>
 
-    <button class="action-tile" id="homePracticeBtn" type="button">
-      <div class="action-icon" aria-hidden="true">🤖</div>
-      <div class="action-label">Practice</div>
-    </button>
-  </main>
+        <!-- avatars (use your pngs) -->
+        <div class="hero-avatars" aria-hidden="true">
+          <img src="./assets/icons/home-icon-avatar-1.png" alt="Avatar Image 1">
+          <img src="./assets/icons/home-icon-avatar-2.png" alt="Avatar Image 2">
+          <img src="./assets/icons/home-icon-avatar-3.png" alt="Avatar Image 3">
+        </div>
 
-  <!-- BOTTOM BAR -->
-  <nav class="home-tabbar" aria-label="Bottom navigation">
-    
-    <button class="tab-btn"><span class="tab-ic">🏆</span><span class="tab-txt">Leaderboard</span></button>
-    <button class="tab-btn"><span class="tab-ic">👥</span><span class="tab-txt">Friends</span></button>
-    
-  </nav>
+        <!-- Main CTA -->
+        <button class="play-online" id="homePlayOnlineBtn" type="button">PLAY ONLINE</button>
+      </div>
+    </div>
 
+    <!-- TILES -->
+    <div class="home-tiles">
+
+      <!-- ROOMS (keeps your existing button id) -->
+      <div class="tile" id="homeRoomsBtn" type="button">
+        <img class="tile-icon" src="./assets/icons/home-icon-rooms.png" alt="padlock icon">
+        <p class="tiles-title">Rooms</p>
+
+        <!-- Optional: inline join UI (you can ignore it if you still route to Create screen) -->
+        <div class="tile-sub">
+          <div class="room-row">
+            <button id="homeJoinRoomBtn" class="btn-join" type="button">Join</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRACTICE (keeps your existing button id) -->
+      <div class="tile" id="homePracticeBtn" type="button">
+        <img class="tile-icon" src="./assets/icons/home-icons-robot.png" alt="robot icon">
+        <p class="tiles-title">Practice</p>
+      </div>
+
+      <!-- LEADERBOARD (keeps your existing button id) -->
+      <div class="tile" id="homeLeaderboardBtn" type="button">
+        <img class="tile-icon" src="./assets/icons/home-icon-trophy.png" alt="trophy icon">
+        <p class="tiles-title">Leaderboard</h3>
+
+        <div class="tile-sub" onclick="event.stopPropagation();">
+          <div class="friends-pill" role="button" tabindex="0">
+            <img class="friends-icon" src="/assets/icons/home-icon-friends.png" alt="Friends Icon">
+            Friends
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="home-wood" aria-hidden="true"></div>
+
+   
   <!-- PROFILE MODAL (placeholder) -->
   <div class="modal-scrim" id="homeProfileModal" aria-hidden="true">
     <div class="modal-sheet" role="dialog" aria-modal="true" aria-label="Profile">
